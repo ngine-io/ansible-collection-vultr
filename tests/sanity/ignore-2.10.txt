@@ -1,0 +1,17 @@
+plugins/modules/vultr_block_storage.py validate-modules:parameter-type-not-in-doc
+plugins/modules/vultr_block_storage.py validate-modules:doc-missing-type
+plugins/modules/vultr_dns_domain.py validate-modules:doc-missing-type
+plugins/modules/vultr_dns_domain_info.py validate-modules:return-syntax-error
+plugins/modules/vultr_dns_record.py validate-modules:parameter-type-not-in-doc
+plugins/modules/vultr_dns_record.py validate-modules:doc-missing-type
+plugins/modules/vultr_firewall_group.py validate-modules:doc-missing-type
+plugins/modules/vultr_firewall_group_info.py validate-modules:return-syntax-error
+plugins/modules/vultr_firewall_rule.py validate-modules:parameter-type-not-in-doc
+plugins/modules/vultr_firewall_rule.py validate-modules:doc-missing-type
+plugins/modules/vultr_network.py validate-modules:doc-missing-type
+plugins/modules/vultr_network_info.py validate-modules:return-syntax-error
+plugins/modules/vultr_region_info.py validate-modules:return-syntax-error
+plugins/modules/vultr_server_info.py validate-modules:return-syntax-error
+plugins/modules/vultr_startup_script_info.py validate-modules:return-syntax-error
+plugins/doc_fragments/vultr.py future-import-boilerplate
+plugins/doc_fragments/vultr.py metaclass-boilerplate

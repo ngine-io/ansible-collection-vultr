@@ -24,11 +24,11 @@ options:
   size:
     description:
       - Size of the block storage volume in GB.
-    required: true
+      - Required if I(state) is present.
   region:
     description:
       - Region the block storage volume is deployed into.
-    required: true
+      - Required if I(state) is present.
   state:
     description:
       - State of the block storage volume.

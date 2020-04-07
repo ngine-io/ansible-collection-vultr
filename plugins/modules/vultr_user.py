@@ -57,6 +57,7 @@ options:
       - upgrade
     aliases: [ acl ]
     type: list
+    elements: str
   state:
     description:
       - State of the user.
@@ -299,7 +300,7 @@ def main():
         password=dict(type='str', no_log=True),
         force=dict(type='bool', default=False),
         api_enabled=dict(type='bool', default=True),
-        acls=dict(type='list', choices=ACLS, aliases=['acl']),
+        acls=dict(type='list', elements='str', choices=ACLS, aliases=['acl']),
         state=dict(type='str', choices=['present', 'absent'], default='present'),
     ))
 

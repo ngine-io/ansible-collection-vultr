@@ -144,13 +144,6 @@ jobs:
         install
         --user
         ${{ matrix.ansible-version }}
-    - name: Install requirements
-      run: >-
-        python -m
-        pip
-        install
-        --user
-        -r tests/requirements.txt
     - name: Download migrated collection artifacts
       uses: actions/download-artifact@v1
       with:

@@ -69,7 +69,7 @@ options:
     description:
       - List of SSH key names or IDs passed to the server on creation.
     aliases: [ ssh_key ]
-    type: list
+    elements: str
   reserved_ip_v4:
     description:
       - IP address of the floating IP to use as the main IP of this server.

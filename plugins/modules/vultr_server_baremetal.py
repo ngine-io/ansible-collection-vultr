@@ -75,7 +75,8 @@ options:
       - State of the server.
     default: present
     choices: [ present, absent ]
-extends_documentation_fragment: vultr
+extends_documentation_fragment:
+- ngine_io.vultr.vultr
 '''
 
 EXAMPLES = r'''

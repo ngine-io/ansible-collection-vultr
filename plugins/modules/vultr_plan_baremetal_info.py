@@ -95,7 +95,7 @@ vultr_plan_baremetal_info:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible.module_utils.vultr import (
+from ..module_utils.vultr import (
     Vultr,
     vultr_argument_spec,
 )
@@ -115,10 +115,10 @@ class AnsibleVultrPlanInfo(Vultr):
             "plan_type": dict(),
             "price_per_month": dict(convert_to='float'),
             "ram": dict(convert_to='int'),
-            "windows": dict(convert_to='bool'), 
-            "cpu_count":  dict(convert_to='int'),
-            "cpu_model":  dict(),
-            "cpu_thread_count":  dict(convert_to='int'),
+            "windows": dict(convert_to='bool'),
+            "cpu_count": dict(convert_to='int'),
+            "cpu_model": dict(),
+            "cpu_thread_count": dict(convert_to='int'),
         }
 
     def get_plans_baremetal(self):

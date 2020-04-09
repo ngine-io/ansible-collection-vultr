@@ -22,8 +22,6 @@ version_added: "2.9"
 author:
  - "Nate River (@vitikc)"
  - "Simon Baerlocher (@sbaerlocher)"
-extends_documentation_fragment:
-- ngine_io.vultr.vultr
 options:
   name:
     description:
@@ -249,7 +247,7 @@ import time
 import base64
 from ansible.module_utils.basic import AnsibleModule
 from ansible.module_utils._text import to_text, to_bytes
-from ansible.module_utils.vultr import (
+from ..module_utils.vultr import (
     Vultr,
     vultr_argument_spec,
 )

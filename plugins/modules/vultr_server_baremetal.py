@@ -529,7 +529,7 @@ def main():
         reserved_ip_v4=dict(),
         startup_script=dict(),
         user_data=dict(),
-        ssh_keys=dict(type='list', aliases=['ssh_key']),
+        ssh_keys=dict(type='list', elements='str', aliases=['ssh_key']),
         region=dict(),
         state=dict(choices=['present', 'absent'], default='present'),
     ))

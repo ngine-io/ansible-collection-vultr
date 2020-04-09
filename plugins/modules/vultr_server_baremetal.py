@@ -28,17 +28,21 @@ options:
       - Name of the server.
     required: true
     aliases: [ label ]
+    type: str
   hostname:
     description:
-      - Hostname to assign to this server.
+      - The hostname to assign to this server.
+    type: str
   os:
     description:
-      - The operating system.
-      - Required if the server does not yet exist.
+      - The operating system name or ID.
+      - Required if the server does not yet exist and is not restoring from a snapshot.
+    type: str
   plan:
     description:
-      - Plan to use for the server.
+      - Plan name or ID to use for the server.
       - Required if the server does not yet exist.
+    type: str
   notify_activate:
     description:
       - Whether to send an activation email when the server is ready or not.
@@ -51,30 +55,38 @@ options:
   tag:
     description:
       - Tag for the server.
+    type: str
   user_data:
     description:
       - User data to be passed to the server.
+    type: str
   startup_script:
     description:
-      - Name of the startup script to execute on boot.
+      - Name or ID of the startup script to execute on boot.
       - Only considered while creating the server.
+    type: str
   ssh_keys:
     description:
-      - List of SSH keys passed to the server on creation.
+      - List of SSH key names or IDs passed to the server on creation.
     aliases: [ ssh_key ]
+    type: list
+    elements: str
   reserved_ip_v4:
     description:
       - IP address of the floating IP to use as the main IP of this server.
       - Only considered on creation.
+    type: str
   region:
     description:
-      - Region the server is deployed into.
+      - Region name or ID the server is deployed into.
       - Required if the server does not yet exist.
+    type: str
   state:
     description:
       - State of the server.
     default: present
     choices: [ present, absent ]
+    type: str
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
 '''

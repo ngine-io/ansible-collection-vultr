@@ -8,17 +8,13 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': 'community'}
-
 DOCUMENTATION = r'''
 ---
 module: vultr_plan_baremetal_info
 short_description: Gather information about the Vultr Bare Metal plans available.
 description:
   - Gather information about Bare Metal plans available to boot servers.
-version_added: "2.9"
+version_added: "1.0"
 author: "Simon Baerlocher (@sbaerlocher)"
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
@@ -26,8 +22,7 @@ extends_documentation_fragment:
 
 EXAMPLES = r'''
 - name: Gather Vultr Bare Metal plans information
-  local_action:
-    module: vultr_baremetal_plan_info
+  ngine_io.vultr.vultr_baremetal_plan_info:
   register: result
 
 - name: Print the gathered information
@@ -62,7 +57,6 @@ vultr_api:
       returned: success
       type: int
       sample: 12
-      version_added: '2.9'
     api_endpoint:
       description: Endpoint used for the API requests
       returned: success

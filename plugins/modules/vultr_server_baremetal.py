@@ -8,17 +8,13 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': 'community'}
-
 DOCUMENTATION = r'''
 ---
 module: vultr_server_baremetal
 short_description: Manages baremetal servers on Vultr.
 description:
   - Deploy and destroy servers.
-version_added: "2.9"
+version_added: "1.0"
 author:
  - "Nate River (@vitikc)"
  - "Simon Baerlocher (@sbaerlocher)"
@@ -93,16 +89,14 @@ extends_documentation_fragment:
 
 EXAMPLES = r'''
 - name: create server
-  local_action:
-    module: vultr_server_baremetal
+  ngine_io.vultr.vultr_server_baremetal:
     name: "{{ vultr_server_baremetal_name }}"
     os: Debian 9 x64 (stretch)
     plan: 32768 MB RAM,2x 240 GB SSD,5.00 TB BW
     region: Amsterdam
 
 - name: ensure a server is absent
-  local_action:
-    module: vultr_server_baremetal
+  ngine_io.vultr.vultr_server_baremetal:
     name: "{{ vultr_server_baremetal_name }}"
     state: absent
 '''

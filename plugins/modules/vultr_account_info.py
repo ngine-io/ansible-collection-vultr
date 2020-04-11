@@ -14,6 +14,7 @@ module: vultr_account_info
 short_description: Get information about the Vultr account.
 description:
   - Get infos about account balance, charges and payments.
+version_added: "1.0.0"
 author: "René Moser (@resmo)"
 extends_documentation_fragment:
 - ngine_io.vultr.vultr

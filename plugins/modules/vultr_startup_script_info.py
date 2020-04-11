@@ -14,6 +14,7 @@ module: vultr_startup_script_info
 short_description: Gather information about the Vultr startup scripts available.
 description:
   - Gather information about vultr_startup_scripts available.
+version_added: "1.0.0"
 author: "Yanis Guenane (@Spredzy)"
 extends_documentation_fragment:
 - ngine_io.vultr.vultr

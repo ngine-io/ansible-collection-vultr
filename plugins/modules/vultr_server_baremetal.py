@@ -14,7 +14,7 @@ module: vultr_server_baremetal
 short_description: Manages baremetal servers on Vultr.
 description:
   - Deploy and destroy servers.
-version_added: "1.0"
+version_added: "1.0.0"
 author:
  - "Nate River (@vitikc)"
  - "Simon Baerlocher (@sbaerlocher)"

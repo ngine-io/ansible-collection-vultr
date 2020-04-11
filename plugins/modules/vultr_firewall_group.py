@@ -14,6 +14,7 @@ module: vultr_firewall_group
 short_description: Manages firewall groups on Vultr.
 description:
   - Create and remove firewall groups.
+version_added: "1.0.0"
 author: "René Moser (@resmo)"
 options:
   name:

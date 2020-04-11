@@ -14,6 +14,7 @@ module: vultr_server_info
 short_description: Gather information about the Vultr servers available.
 description:
   - Gather information about servers available.
+version_added: "1.0.0"
 author: "Yanis Guenane (@Spredzy)"
 extends_documentation_fragment:
 - ngine_io.vultr.vultr

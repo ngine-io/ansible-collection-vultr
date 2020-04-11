@@ -15,6 +15,7 @@ module: vultr_block_storage_info
 short_description: Get information about the Vultr block storage volumes available.
 description:
   - Get infos about block storage volumes available in Vultr.
+version_added: "1.0.0"
 author:
   - "Yanis Guenane (@Spredzy)"
   - "René Moser (@resmo)"

@@ -13,6 +13,7 @@ DOCUMENTATION = r'''
 ---
 module: vultr_user_info
 short_description: Get information about the Vultr user available.
+version_added: "1.0.0"
 description:
   - Get infos about users available in Vultr.
 author:
@@ -60,7 +61,6 @@ vultr_api:
       returned: success
       type: int
       sample: 12
-      version_added: '2.9'
     api_endpoint:
       description: Endpoint used for the API requests
       returned: success

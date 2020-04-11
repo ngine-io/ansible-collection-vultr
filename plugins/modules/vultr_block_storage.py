@@ -15,6 +15,7 @@ short_description: Manages block storage volumes on Vultr.
 description:
   - Manage block storage volumes on Vultr.
 author: "Yanis Guenane (@Spredzy)"
+version_added: "1.0.0"
 options:
   name:
     description:

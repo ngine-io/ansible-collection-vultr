@@ -13,6 +13,7 @@ module: vultr_network_info
 short_description: Gather information about the Vultr networks available.
 description:
   - Gather information about networks available in Vultr.
+version_added: "1.0.0"
 author: "Yanis Guenane (@Spredzy)"
 extends_documentation_fragment:
 - ngine_io.vultr.vultr

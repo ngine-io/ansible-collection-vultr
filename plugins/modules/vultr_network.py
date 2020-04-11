@@ -14,6 +14,7 @@ module: vultr_network
 short_description: Manages networks on Vultr.
 description:
   - Manage networks on Vultr. A network cannot be updated. It needs to be deleted and re-created.
+version_added: "1.0.0"
 author: "Yanis Guenane (@Spredzy)"
 options:
   name:

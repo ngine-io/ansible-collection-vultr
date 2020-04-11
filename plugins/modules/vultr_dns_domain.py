@@ -14,6 +14,7 @@ module: vultr_dns_domain
 short_description: Manages DNS domains on Vultr.
 description:
   - Create and remove DNS domains.
+version_added: "1.0.0"
 author: "René Moser (@resmo)"
 options:
   name:

@@ -7,14 +7,14 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '0.1',
+ANSIBLE_METADATA = {'metadata_version': '1.1',
                     'status': ['preview'],
                     'supported_by': 'community'}
 
 DOCUMENTATION = r'''
 ---
 module: vultr_lb
-short_description: Manages Load Balanders on Vultr.
+short_description: Manages Load Balancers on Vultr
 description:
   - Create and remove Load Balancers.
 author: "Julien BORDELLIER (@jstoja)"
@@ -23,55 +23,65 @@ options:
     description:
       - DCID integer Location in which to create the load balancer.
     required: true
+    type: int
   name:
     description:
       - Text label that will be associated with the subscription.
     aliases: [ label ]
     required: true
+    type: str
   config_ssl_redirect:
     description:
       - Forces redirect from HTTP to HTTPS.
+    type: bool
   sticky_sessions:
     description:
       - Enables stick sessions for your load balancer.
+    type: bool
   cookie_name:
     description:
       - Name for your stick session.
+    type: str
   balancing_algorithm:
     description:
       - Balancing algorithm for your load balancer.
     choices: [ roundrobin, leastconn ]
+    type: str
   health_check:
     description:
       - Defines health checks for your attached backend nodes.
+    type: complex
   forwarding_rules:
     description:
       - Defines forwarding rules that your load balancer will follow.
+    type: complex
   ssl_private_key:
     description:
       - The SSL certificates private key.
+    type: str
   ssl_certificate:
     description:
       - The SSL Certificate.
-  ssl_chain
+    type: str
+  ssl_chain:
     description:
       - The SSL certificate chain.
+    type: str
   state:
     description:
       - State of the Load Balancer.
     default: present
     choices: [ present, absent ]
+    type: str
 extends_documentation_fragment:
 - community.general.vultr
-
 '''
 
 EXAMPLES = r'''
 - name: Ensure a Load Balancer exists
-  local_action:
-    module: vultr_lb
+  community.general.vultr_lb:
     dcid: 1
-    algorithm: Leastconn
+    balancing_algorithm: leastconn
     label: web
     state: present
     forwarding_rules:
@@ -79,6 +89,7 @@ EXAMPLES = r'''
         frontend_port: 81
         backend_protocol: https
         backend_port: 81
+  delegate_to: localhost
 '''
 
 RETURN = r'''
@@ -224,7 +235,7 @@ class AnsibleVultrLoadBalancer(Vultr):
 
         # StickSessions should be either 'on' or 'off'
         if 'sticky_sessions' in data:
-            ss_values = { True: 'on', False: 'off'}
+            ss_values = {True: 'on', False: 'off'}
             data['sticky_sessions'] = ss_values[data['sticky_sessions']]
 
         self.result['diff']['before'] = {}
@@ -266,30 +277,49 @@ def main():
         'name': {
             'required': True,
             'aliases': ['domain'],
+            'type': 'str',
         },
         'dcid': {
             'required': True,
+            'type': 'int',
         },
-        'config_ssl_redirect': {},
-        'sticky_sessions': {},
-        'cookie_name': {},
-        'balancing_algorithm': {},
-        'health_check': {},
-        'forwarding_rules': {},
-        'ssl_private_key': {},
-        'ssl_certificate': {},
-        'ssl_chain': {},
+        'config_ssl_redirect': {
+            'type': 'bool',
+        },
+        'sticky_sessions': {
+            'type': 'bool',
+        },
+        'cookie_name': {
+            'type': 'str',
+        },
+        'balancing_algorithm': {
+            'type': 'str',
+        },
+        'health_check': {
+            'type': 'complex',
+        },
+        'forwarding_rules': {
+            'type': 'complex',
+        },
+        'ssl_private_key': {
+            'type': 'str',
+        },
+        'ssl_certificate': {
+            'type': 'str',
+        },
+        'ssl_chain': {
+            'type': 'str',
+        },
         'state': {
             'choices': ['present', 'absent'],
             'default': 'present',
+            'type': 'str',
         },
     })
 
     module = AnsibleModule(
         argument_spec=argument_spec,
-        required_if=[
-            ('state', 'present', ['name', 'dcid']),
-        ],
+        required_if=[],
         supports_check_mode=True,
     )
 

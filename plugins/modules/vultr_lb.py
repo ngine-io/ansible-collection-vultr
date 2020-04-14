@@ -71,7 +71,7 @@ options:
     choices: [ present, absent ]
     type: str
 extends_documentation_fragment:
-- ngine_io.vultr.vultr_lb
+- ngine_io.vultr.vultr
 '''
 
 EXAMPLES = r'''

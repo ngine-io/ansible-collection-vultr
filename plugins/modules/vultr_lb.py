@@ -79,7 +79,7 @@ extends_documentation_fragment:
 
 EXAMPLES = r'''
 - name: Ensure a Load Balancer exists
-  community.general.vultr_lb:
+  ngine_io.vultr.vultr_lb:
     dcid: 1
     balancing_algorithm: leastconn
     label: web

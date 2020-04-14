@@ -7,9 +7,6 @@
 from __future__ import (absolute_import, division, print_function)
 __metaclass__ = type
 
-ANSIBLE_METADATA = {'metadata_version': '1.1',
-                    'status': ['preview'],
-                    'supported_by': 'community'}
 
 DOCUMENTATION = r'''
 ---
@@ -74,7 +71,7 @@ options:
     choices: [ present, absent ]
     type: str
 extends_documentation_fragment:
-- community.general.vultr
+- ngine_io.vultr.vultr_lb
 '''
 
 EXAMPLES = r'''
@@ -172,7 +169,7 @@ vultr_dns_domain:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ansible_collections.community.general.plugins.module_utils.vultr import (
+from ..module_utils.vultr import (
     Vultr,
     vultr_argument_spec,
 )

@@ -22,111 +22,94 @@ options:
     required: true
     type: int
   name:
-    description:
-      - Text label that will be associated with the subscription.
+    description: Text label that will be associated with the subscription.
     aliases: [ label ]
     required: true
     type: str
   config_ssl_redirect:
-    description:
-      - Forces redirect from HTTP to HTTPS.
+    description: Forces redirect from HTTP to HTTPS.
     type: bool
   sticky_sessions:
-    description:
-      - Enables stick sessions for your load balancer.
+    description: Enables stick sessions for your load balancer.
     type: bool
   cookie_name:
-    description:
-      - Name for your stick session.
+    description: Name for your stick session.
     type: str
   balancing_algorithm:
-    description:
-      - Balancing algorithm for your load balancer.
+    description: Balancing algorithm for your load balancer.
     choices: [ roundrobin, leastconn ]
     type: str
   health_check:
-    description:
-      - Defines health checks for your attached backend nodes.
+    description: Defines health checks for your attached backend nodes.
+    type: dict
     suboptions:
       protocol:
-        description:
-          - Connection protocol. Possible values: "http", "https".
+        description: Connection protocol.
+        choices: [ http, https ]
         type: str
       port:
-        description:
-          - Connection port.
+        description: Connection port.
         type: int
       check_interval:
-        description:
-          - Time in seconds to perform health check.
+        description: Time in seconds to perform health check.
         type: int
-      reponse_timeout:
-        description:
-          - Time in seconds to wait for a health check response.
+      response_timeout:
+        description: Time in seconds to wait for a health check response.
         type: int
       unhealthy_threshold:
-        description:
-          - Number of failed attempts encountered before failover.
+        description: Number of failed attempts encountered before failover.
         type: int
       healthy_threshold:
-        description:
-          - Number of failed attempts encountered before failover.
+        description: Number of failed attempts encountered before failover.
         type: int
       path:
         description:
-          - Path to page used for health check. The target page must return an HTTP 200 success code.
+          - Path to page used for health check.
+          - The target page must return an HTTP 200 success code.
         type: str
   forwarding_rules:
-    description:
-      - Defines forwarding rules that your load balancer will follow.
+    description: Defines forwarding rules that your load balancer will follow.
     type: list
     suboptions:
       frontend_protocol:
-        description:
-          - Endpoint protocol on load balancer side.
+        description: Endpoint protocol on load balancer side.
         choices:
           - http
           - https
           - tpc
         required: true
       frontend_port:
-        description:
-          - Endpoint port on load balancer side.
+        description: Endpoint port on load balancer side.
         type: int
         required: true
       backend_protocol:
-        description:
-          - Endpoint protocol on instance side.
+        description: Endpoint protocol on instance side.
         choices:
           - http
           - https
           - tpc
         required: true
       backend_port:
-        description:
-          - Endpoint port on instance side.
+        description: Endpoint port on instance side.
         type: int
         required: true
   ssl_private_key:
-    description:
-      - The SSL certificates private key.
+    description: The SSL certificates private key.
     type: str
   ssl_certificate:
-    description:
-      - The SSL Certificate.
+    description: The SSL Certificate.
     type: str
   ssl_chain:
-    description:
-      - The SSL certificate chain.
+    description: The SSL certificate chain.
     type: str
   state:
-    description:
-      - State of the Load Balancer.
+    description: State of the Load Balancer.
     default: present
     choices: [ present, absent ]
     type: str
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
+
 '''
 
 EXAMPLES = r'''
@@ -176,7 +159,7 @@ vultr_api:
       returned: success
       type: str
       sample: "https://api.vultr.com"
-vultr_dns_domain:
+vultr_lb:
   description: Response from Vultr API
   returned: success
   type: complex
@@ -207,7 +190,7 @@ vultr_dns_domain:
       type: str
       sample: "lb01"
     status:
-      description: Status of the subscription and will be one of: pending | active | suspended | closed.
+      description: "Status of the subscription and will be one of: pending | active | suspended | closed."
       returned: success
       type: str
       sample: "active"
@@ -231,7 +214,7 @@ from ..module_utils.vultr import (
 
 
 HEALTH_CHECK_SPEC = {
-    'protocol': {'type': 'str'},
+    'protocol': {'type': 'str', 'choices': ['http', 'https']},
     'port': {'type': 'int'},
     'path': {'type': 'str'},
     'check_interval': {'type': 'int'},

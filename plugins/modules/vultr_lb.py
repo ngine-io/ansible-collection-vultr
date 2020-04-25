@@ -47,11 +47,66 @@ options:
   health_check:
     description:
       - Defines health checks for your attached backend nodes.
-    type: complex
+    suboptions:
+      protocol:
+        description:
+          - Connection protocol. Possible values: "http", "https".
+        type: str
+      port:
+        description:
+          - Connection port.
+        type: int
+      check_interval:
+        description:
+          - Time in seconds to perform health check.
+        type: int
+      reponse_timeout:
+        description:
+          - Time in seconds to wait for a health check response.
+        type: int
+      unhealthy_threshold:
+        description:
+          - Number of failed attempts encountered before failover.
+        type: int
+      healthy_threshold:
+        description:
+          - Number of failed attempts encountered before failover.
+        type: int
+      path:
+        description:
+          - Path to page used for health check. The target page must return an HTTP 200 success code.
+        type: str
   forwarding_rules:
     description:
       - Defines forwarding rules that your load balancer will follow.
-    type: complex
+    type: list
+    suboptions:
+      frontend_protocol:
+        description:
+          - Endpoint protocol on load balancer side.
+        choices:
+          - http
+          - https
+          - tpc
+        required: true
+      frontend_port:
+        description:
+          - Endpoint port on load balancer side.
+        type: int
+        required: true
+      backend_protocol:
+        description:
+          - Endpoint protocol on instance side.
+        choices:
+          - http
+          - https
+          - tpc
+        required: true
+      backend_port:
+        description:
+          - Endpoint port on instance side.
+        type: int
+        required: true
   ssl_private_key:
     description:
       - The SSL certificates private key.
@@ -175,6 +230,23 @@ from ..module_utils.vultr import (
 )
 
 
+HEALTH_CHECK_SPEC = {
+    'protocol': {'type': 'str'},
+    'port': {'type': 'int'},
+    'path': {'type': 'str'},
+    'check_interval': {'type': 'int'},
+    'response_timeout': {'type': 'int'},
+    'unhealthy_threshold': {'type': 'int'},
+    'healthy_threshold': {'type': 'int'},
+}
+
+FORWARDING_RULE_SPEC = {
+      'frontend_protocol': {'type': 'str', 'choices': ['http', 'https', 'tcp'], 'required': True},
+      'frontend_port': {'type': 'int', 'required': True},
+      'backend_protocol': {'type': 'str', 'choices': ['http', 'https', 'tcp'], 'required': True},
+      'backend_port': {'type': 'int', 'required': True},
+}
+
 class AnsibleVultrLoadBalancer(Vultr):
 
     def __init__(self, module):
@@ -192,7 +264,7 @@ class AnsibleVultrLoadBalancer(Vultr):
             found_lbs = [lb for lb in lb_list if lb['name'] is lb_name]
 
         if len(found_lbs) in (0, 1):
-            self.module.warn("Found more than 1 or no Vultr Load Balancer matching {}".format(lb_name))
+            self.module.warn("Found more than 1 or no Vultr Load Balancer matching name")
             return {}
 
         return found_lbs[0]
@@ -291,12 +363,16 @@ def main():
         },
         'balancing_algorithm': {
             'type': 'str',
+            'choices': ['roundrobin', 'leastconn'],
         },
         'health_check': {
-            'type': 'complex',
+            'type': 'dict',
+            'options': HEALTH_CHECK_SPEC,
         },
         'forwarding_rules': {
-            'type': 'complex',
+            'type': 'list',
+            'elements': 'dict',
+            'options': FORWARDING_RULE_SPEC,
         },
         'ssl_private_key': {
             'type': 'str',

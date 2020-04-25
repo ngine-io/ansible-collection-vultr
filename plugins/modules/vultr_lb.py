@@ -70,13 +70,15 @@ options:
   forwarding_rules:
     description: Defines forwarding rules that your load balancer will follow.
     type: list
+    elements: dict
     suboptions:
       frontend_protocol:
         description: Endpoint protocol on load balancer side.
         choices:
           - http
           - https
-          - tpc
+          - tcp
+        type: str
         required: true
       frontend_port:
         description: Endpoint port on load balancer side.
@@ -87,7 +89,8 @@ options:
         choices:
           - http
           - https
-          - tpc
+          - tcp
+        type: str
         required: true
       backend_port:
         description: Endpoint port on instance side.
@@ -199,7 +202,7 @@ vultr_lb:
       returned: success
       type: str
       sample: "203.0.113.20"
-    ipv4:
+    ipv6:
       description: IPv6 of the Load Balancer.
       returned: success
       type: str
@@ -223,12 +226,14 @@ HEALTH_CHECK_SPEC = {
     'healthy_threshold': {'type': 'int'},
 }
 
+
 FORWARDING_RULE_SPEC = {
-      'frontend_protocol': {'type': 'str', 'choices': ['http', 'https', 'tcp'], 'required': True},
-      'frontend_port': {'type': 'int', 'required': True},
-      'backend_protocol': {'type': 'str', 'choices': ['http', 'https', 'tcp'], 'required': True},
-      'backend_port': {'type': 'int', 'required': True},
+    'frontend_protocol': {'type': 'str', 'choices': ['http', 'https', 'tcp'], 'required': True},
+    'frontend_port': {'type': 'int', 'required': True},
+    'backend_protocol': {'type': 'str', 'choices': ['http', 'https', 'tcp'], 'required': True},
+    'backend_port': {'type': 'int', 'required': True},
 }
+
 
 class AnsibleVultrLoadBalancer(Vultr):
 
@@ -328,7 +333,7 @@ def main():
     argument_spec.update({
         'name': {
             'required': True,
-            'aliases': ['domain'],
+            'aliases': ['label'],
             'type': 'str',
         },
         'dcid': {

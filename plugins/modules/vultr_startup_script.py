@@ -14,6 +14,7 @@ module: vultr_startup_script
 short_description: Manages startup scripts on Vultr.
 description:
   - Create, update and remove startup scripts.
+version_added: "1.0.0"
 author: "René Moser (@resmo)"
 options:
   name:

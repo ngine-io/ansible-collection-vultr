@@ -35,7 +35,10 @@ class Vultr:
     def __init__(self, module, namespace):
 
         if module._name.startswith('vr_'):
-            module.deprecate("The Vultr modules were renamed. The prefix of the modules changed from vr_ to vultr_", version='2.11')
+            module.deprecate(
+                "The Vultr modules were renamed. The prefix of the modules changed from vr_ to vultr_",
+                collection_name='ngine_io.vultr',
+                version='2.0.0')  # Was Ansbile 2.11
 
         self.module = module
 

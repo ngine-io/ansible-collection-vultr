@@ -13,7 +13,7 @@ module: vultr_dns_domain_info
 short_description: Gather information about the Vultr DNS domains available.
 description:
   - Gather information about DNS domains available in Vultr.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author: "Yanis Guenane (@Spredzy)"
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
@@ -66,13 +66,17 @@ vultr_dns_domain_info:
   description: Response from Vultr API
   returned: success
   type: complex
-  sample:
-    "vultr_dns_domain_info": [
-      {
-        "date_created": "2018-07-19 07:14:21",
-        "domain": "ansibletest.com"
-      }
-    ]
+  contains:
+    domain:
+      description: Name of the DNS Domain.
+      returned: success
+      type: str
+      sample: example.com
+    date_created:
+      description: Date the DNS domain was created.
+      returned: success
+      type: str
+      sample: "2017-08-26 12:47:48"
 '''
 
 from ansible.module_utils.basic import AnsibleModule

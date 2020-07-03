@@ -14,7 +14,7 @@ module: vultr_startup_script_info
 short_description: Gather information about the Vultr startup scripts available.
 description:
   - Gather information about vultr_startup_scripts available.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author: "Yanis Guenane (@Spredzy)"
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
@@ -67,17 +67,37 @@ vultr_startup_script_info:
   description: Response from Vultr API
   returned: success
   type: complex
-  sample:
-    "vultr_startup_script_info": [
-      {
-        "date_created": "2018-07-19 08:38:36",
-        "date_modified": "2018-07-19 08:38:36",
-        "id": 327133,
-        "name": "lolo",
-        "script": "#!/bin/bash\necho Hello World > /root/hello",
-        "type": "boot"
-      }
-    ]
+  contains:
+    id:
+      description: ID of the startup script.
+      returned: success
+      type: str
+      sample: 249395
+    name:
+      description: Name of the startup script.
+      returned: success
+      type: str
+      sample: my startup script
+    script:
+      description: The source code of the startup script.
+      returned: success
+      type: str
+      sample: "#!/bin/bash\necho Hello World > /root/hello"
+    type:
+      description: The type of the startup script.
+      returned: success
+      type: str
+      sample: pxe
+    date_created:
+      description: Date the startup script was created.
+      returned: success
+      type: str
+      sample: "2017-08-26 12:47:48"
+    date_modified:
+      description: Date the startup script was modified.
+      returned: success
+      type: str
+      sample: "2017-08-26 12:47:48"
 '''
 
 from ansible.module_utils.basic import AnsibleModule

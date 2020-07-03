@@ -13,7 +13,7 @@ module: vultr_network_info
 short_description: Gather information about the Vultr networks available.
 description:
   - Gather information about networks available in Vultr.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author: "Yanis Guenane (@Spredzy)"
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
@@ -66,17 +66,37 @@ vultr_network_info:
   description: Response from Vultr API
   returned: success
   type: complex
-  sample:
-    "vultr_network_info": [
-      {
-        "date_created": "2018-08-02 11:18:49",
-        "id": "net5b62e8991adfg",
-        "name": "mynet",
-        "region": "Amsterdam",
-        "v4_subnet": "192.168.42.0",
-        "v4_subnet_mask": 24
-      }
-    ]
+  contains:
+    id:
+      description: ID of the network
+      returned: success
+      type: str
+      sample: "net5b62c6dc63ef5"
+    name:
+      description: Name (label) of the network
+      returned: success
+      type: str
+      sample: "mynetwork"
+    date_created:
+      description: Date when the network was created
+      returned: success
+      type: str
+      sample: "2018-08-02 08:54:52"
+    region:
+      description: Region the network was deployed into
+      returned: success
+      type: str
+      sample: "Amsterdam"
+    v4_subnet:
+      description: IPv4 Network address
+      returned: success
+      type: str
+      sample: "192.168.42.0"
+    v4_subnet_mask:
+      description: Ipv4 Network mask
+      returned: success
+      type: int
+      sample: 24
 '''
 
 from ansible.module_utils.basic import AnsibleModule

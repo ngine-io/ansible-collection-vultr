@@ -14,7 +14,7 @@ module: vultr_server_baremetal
 short_description: Manages baremetal servers on Vultr.
 description:
   - Deploy and destroy servers.
-version_added: "1.0.0"
+version_added: "0.3.0"
 author:
  - "Nate River (@vitikc)"
  - "Simon Baerlocher (@sbaerlocher)"
@@ -514,18 +514,18 @@ def main():
     argument_spec = vultr_argument_spec()
     argument_spec.update(dict(
         name=dict(required=True, aliases=['label']),
-        hostname=dict(),
-        os=dict(),
-        plan=dict(),
+        hostname=dict(type='str',),
+        os=dict(type='str',),
+        plan=dict(type='str',),
         notify_activate=dict(type='bool', default=False),
         ipv6_enabled=dict(type='bool'),
-        tag=dict(),
-        reserved_ip_v4=dict(),
-        startup_script=dict(),
-        user_data=dict(),
+        tag=dict(type='str',),
+        reserved_ip_v4=dict(type='str',),
+        startup_script=dict(type='str',),
+        user_data=dict(type='str',),
         ssh_keys=dict(type='list', elements='str', aliases=['ssh_key']),
-        region=dict(),
-        state=dict(choices=['present', 'absent'], default='present'),
+        region=dict(type='str',),
+        state=dict(type='str', choices=['present', 'absent'], default='present'),
     ))
 
     module = AnsibleModule(

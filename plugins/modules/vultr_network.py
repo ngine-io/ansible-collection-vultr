@@ -14,7 +14,7 @@ module: vultr_network
 short_description: Manages networks on Vultr.
 description:
   - Manage networks on Vultr. A network cannot be updated. It needs to be deleted and re-created.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author: "Yanis Guenane (@Spredzy)"
 options:
   name:
@@ -22,17 +22,21 @@ options:
       - Name of the network.
     required: true
     aliases: [ description, label ]
+    type: str
   cidr:
     description:
       - The CIDR IPv4 network block to be used when attaching servers to this network. Required if I(state=present).
+    type: str
   region:
     description:
       - Region the network is deployed into. Required if I(state=present).
+    type: str
   state:
     description:
       - State of the network.
     default: present
     choices: [ present, absent ]
+    type: str
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
 
@@ -202,9 +206,9 @@ class AnsibleVultrNetwork(Vultr):
 def main():
     argument_spec = vultr_argument_spec()
     argument_spec.update(dict(
-        name=dict(required=True, aliases=['description', 'label']),
-        cidr=dict(),
-        region=dict(),
+        name=dict(type='str', required=True, aliases=['description', 'label']),
+        cidr=dict(type='str',),
+        region=dict(type='str',),
         state=dict(choices=['present', 'absent'], default='present'),
     ))
 

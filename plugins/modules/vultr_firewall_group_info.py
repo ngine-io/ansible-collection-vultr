@@ -13,7 +13,7 @@ module: vultr_firewall_group_info
 short_description: Gather information about the Vultr firewall groups available.
 description:
   - Gather information about firewall groups available in Vultr.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author: "Yanis Guenane (@Spredzy)"
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
@@ -66,18 +66,27 @@ vultr_firewall_group_info:
   description: Response from Vultr API
   returned: success
   type: complex
-  sample:
-    "vultr_firewall_group_info": [
-      {
-        "date_created": "2018-07-12 10:27:14",
-        "date_modified": "2018-07-12 10:27:14",
-        "description": "test",
-        "id": "5e128ff0",
-        "instance_count": 0,
-        "max_rule_count": 50,
-        "rule_count": 0
-      }
-    ]
+  contains:
+    id:
+      description: ID of the firewall group
+      returned: success
+      type: str
+      sample: 1234abcd
+    description:
+      description: Name of the firewall group
+      returned: success
+      type: str
+      sample: my firewall group
+    date_created:
+      description: Date the firewall group was created
+      returned: success
+      type: str
+      sample: "2017-08-26 12:47:48"
+    date_modified:
+      description: Date the firewall group was modified
+      returned: success
+      type: str
+      sample: "2017-08-26 12:47:48"
 '''
 
 from ansible.module_utils.basic import AnsibleModule

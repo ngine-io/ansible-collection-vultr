@@ -14,7 +14,7 @@ module: vultr_server
 short_description: Manages virtual servers on Vultr.
 description:
   - Deploy, start, stop, update, restart, reinstall servers.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author: "René Moser (@resmo)"
 options:
   name:

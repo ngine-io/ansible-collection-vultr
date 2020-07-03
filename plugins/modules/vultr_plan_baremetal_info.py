@@ -14,7 +14,7 @@ module: vultr_plan_baremetal_info
 short_description: Gather information about the Vultr Bare Metal plans available.
 description:
   - Gather information about Bare Metal plans available to boot servers.
-version_added: "1.0.0"
+version_added: "0.3.0"
 author: "Simon Baerlocher (@sbaerlocher)"
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
@@ -68,7 +68,7 @@ vultr_plan_baremetal_info:
   type: complex
   contains:
     plan:
-      description: List of the  Bare Metal plans available.
+      description: List of the Bare Metal plans available.
       returned: success
       type: list
       sample: [{

@@ -16,7 +16,7 @@ module: vultr_ssh_key_info
 short_description: Get information about the Vultr SSH keys available.
 description:
   - Get infos about SSH keys available.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author:
   - "Yanis Guenane (@Spredzy)"
   - "René Moser (@resmo)"

@@ -14,7 +14,7 @@ module: vultr_dns_domain
 short_description: Manages DNS domains on Vultr.
 description:
   - Create and remove DNS domains.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author: "René Moser (@resmo)"
 options:
   name:
@@ -22,16 +22,19 @@ options:
       - The domain name.
     required: true
     aliases: [ domain ]
+    type: str
   server_ip:
     description:
       - The default server IP.
       - Use M(vultr_dns_record) to change it once the domain is created.
       - Required if C(state=present).
+    type: str
   state:
     description:
       - State of the DNS domain.
     default: present
     choices: [ present, absent ]
+    type: str
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
 
@@ -172,9 +175,9 @@ class AnsibleVultrDnsDomain(Vultr):
 def main():
     argument_spec = vultr_argument_spec()
     argument_spec.update(dict(
-        name=dict(required=True, aliases=['domain']),
-        server_ip=dict(),
-        state=dict(choices=['present', 'absent'], default='present'),
+        name=dict(type='str', required=True, aliases=['domain']),
+        server_ip=dict(type='str',),
+        state=dict(type='str', choices=['present', 'absent'], default='present'),
     ))
 
     module = AnsibleModule(

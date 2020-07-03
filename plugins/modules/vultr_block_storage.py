@@ -15,26 +15,30 @@ short_description: Manages block storage volumes on Vultr.
 description:
   - Manage block storage volumes on Vultr.
 author: "Yanis Guenane (@Spredzy)"
-version_added: "1.0.0"
+version_added: "0.1.0"
 options:
   name:
     description:
       - Name of the block storage volume.
     required: true
     aliases: [ description, label ]
+    type: str
   size:
     description:
       - Size of the block storage volume in GB.
       - Required if I(state) is present.
+    type: int
   region:
     description:
       - Region the block storage volume is deployed into.
       - Required if I(state) is present.
+    type: str
   state:
     description:
       - State of the block storage volume.
     default: present
     choices: [ present, absent ]
+    type: str
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
 
@@ -216,10 +220,10 @@ class AnsibleVultrBlockStorage(Vultr):
 def main():
     argument_spec = vultr_argument_spec()
     argument_spec.update(dict(
-        name=dict(required=True, aliases=['description', 'label']),
+        name=dict(type='str', required=True, aliases=['description', 'label']),
         size=dict(type='int'),
-        region=dict(),
-        state=dict(choices=['present', 'absent'], default='present'),
+        region=dict(type='str'),
+        state=dict(type='str', choices=['present', 'absent'], default='present'),
     ))
 
     module = AnsibleModule(

@@ -14,44 +14,51 @@ module: vultr_firewall_rule
 short_description: Manages firewall rules on Vultr.
 description:
   - Create and remove firewall rules.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author: "René Moser (@resmo)"
 options:
   group:
     description:
       - Name of the firewall group.
     required: true
+    type: str
   ip_version:
     description:
       - IP address version
     choices: [ v4, v6 ]
     default: v4
     aliases: [ ip_type ]
+    type: str
   protocol:
     description:
       - Protocol of the firewall rule.
     choices: [ icmp, tcp, udp, gre ]
     default: tcp
+    type: str
   cidr:
     description:
       - Network in CIDR format
       - The CIDR format must match with the C(ip_version) value.
       - Required if C(state=present).
       - Defaulted to 0.0.0.0/0 or ::/0 depending on C(ip_version).
+    type: str
   start_port:
     description:
       - Start port for the firewall rule.
       - Required if C(protocol) is tcp or udp and I(state=present).
     aliases: [ port ]
+    type: int
   end_port:
     description:
       - End port for the firewall rule.
       - Only considered if C(protocol) is tcp or udp and I(state=present).
+    type: int
   state:
     description:
       - State of the firewall rule.
     default: present
     choices: [ present, absent ]
+    type: str
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
 
@@ -349,13 +356,13 @@ class AnsibleVultrFirewallRule(Vultr):
 def main():
     argument_spec = vultr_argument_spec()
     argument_spec.update(dict(
-        group=dict(required=True),
+        group=dict(type='str', required=True),
         start_port=dict(type='int', aliases=['port']),
         end_port=dict(type='int'),
-        protocol=dict(choices=['tcp', 'udp', 'gre', 'icmp'], default='tcp'),
-        cidr=dict(),
-        ip_version=dict(choices=['v4', 'v6'], default='v4', aliases=['ip_type']),
-        state=dict(choices=['present', 'absent'], default='present'),
+        protocol=dict(type='str', choices=['tcp', 'udp', 'gre', 'icmp'], default='tcp'),
+        cidr=dict(type='str',),
+        ip_version=dict(type='str', choices=['v4', 'v6'], default='v4', aliases=['ip_type']),
+        state=dict(type='str', choices=['present', 'absent'], default='present'),
     ))
 
     module = AnsibleModule(

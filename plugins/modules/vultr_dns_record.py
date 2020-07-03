@@ -14,7 +14,7 @@ module: vultr_dns_record
 short_description: Manages DNS records on Vultr.
 description:
   - Create, update and remove DNS records.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author: "René Moser (@resmo)"
 options:
   name:
@@ -22,9 +22,11 @@ options:
       - The record name (subrecord).
     default: ""
     aliases: [ subrecord ]
+    type: str
   domain:
     description:
       - The domain the record is related to.
+    type: str
     required: true
   record_type:
     description:
@@ -41,14 +43,17 @@ options:
     - NS
     - SSHFP
     aliases: [ type ]
+    type: str
   data:
     description:
       - Data of the record.
       - Required if C(state=present) or C(multiple=yes).
+    type: str
   ttl:
     description:
       - TTL of the record.
     default: 300
+    type: int
   multiple:
     description:
       - Whether to use more than one record with similar C(name) including no name and C(record_type).
@@ -60,11 +65,13 @@ options:
     description:
       - Priority of the record.
     default: 0
+    type: int
   state:
     description:
       - State of the DNS record.
     default: present
     choices: [ present, absent ]
+    type: str
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
 
@@ -335,14 +342,14 @@ class AnsibleVultrDnsRecord(Vultr):
 def main():
     argument_spec = vultr_argument_spec()
     argument_spec.update(dict(
-        domain=dict(required=True),
-        name=dict(default="", aliases=['subrecord']),
-        state=dict(choices=['present', 'absent'], default='present'),
+        domain=dict(type='str', required=True),
+        name=dict(type='str', default="", aliases=['subrecord']),
+        state=dict(type='str', choices=['present', 'absent'], default='present'),
         ttl=dict(type='int', default=300),
-        record_type=dict(choices=RECORD_TYPES, default='A', aliases=['type']),
+        record_type=dict(type='str', choices=RECORD_TYPES, default='A', aliases=['type']),
         multiple=dict(type='bool', default=False),
         priority=dict(type='int', default=0),
-        data=dict()
+        data=dict(type='str',)
     ))
 
     module = AnsibleModule(

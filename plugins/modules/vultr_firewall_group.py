@@ -14,7 +14,7 @@ module: vultr_firewall_group
 short_description: Manages firewall groups on Vultr.
 description:
   - Create and remove firewall groups.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author: "René Moser (@resmo)"
 options:
   name:
@@ -22,11 +22,13 @@ options:
       - Name of the firewall group.
     required: true
     aliases: [ description ]
+    type: str
   state:
     description:
       - State of the firewall group.
     default: present
     choices: [ present, absent ]
+    type: str
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
 
@@ -176,8 +178,8 @@ class AnsibleVultrFirewallGroup(Vultr):
 def main():
     argument_spec = vultr_argument_spec()
     argument_spec.update(dict(
-        name=dict(required=True, aliases=['description']),
-        state=dict(choices=['present', 'absent'], default='present'),
+        name=dict(type='str', required=True, aliases=['description']),
+        state=dict(type='str', choices=['present', 'absent'], default='present'),
     ))
 
     module = AnsibleModule(

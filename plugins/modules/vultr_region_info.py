@@ -14,7 +14,7 @@ module: vultr_region_info
 short_description: Gather information about the Vultr regions available.
 description:
   - Gather information about regions available to boot servers.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author: "Yanis Guenane (@Spredzy)"
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
@@ -66,9 +66,8 @@ vultr_api:
 vultr_region_info:
   description: Response from Vultr API
   returned: success
-  type: complex
-  sample:
-    "vultr_region_info": [
+  type: list
+  sample: [
       {
         "block_storage": false,
         "continent": "Europe",

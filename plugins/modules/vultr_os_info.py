@@ -15,7 +15,7 @@ module: vultr_os_info
 short_description: Get information about the Vultr OSes available.
 description:
   - Get infos about OSes available to boot servers.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author:
   - "Yanis Guenane (@Spredzy)"
   - "René Moser (@resmo)"

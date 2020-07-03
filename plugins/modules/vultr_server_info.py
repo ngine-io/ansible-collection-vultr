@@ -14,7 +14,7 @@ module: vultr_server_info
 short_description: Gather information about the Vultr servers available.
 description:
   - Gather information about servers available.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author: "Yanis Guenane (@Spredzy)"
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
@@ -67,41 +67,152 @@ vultr_server_info:
   description: Response from Vultr API
   returned: success
   type: complex
-  sample:
-    "vultr_server_info": [
-      {
-        "allowed_bandwidth_gb": 1000,
-        "auto_backup_enabled": false,
-        "application": null,
-        "cost_per_month": 5.00,
-        "current_bandwidth_gb": 0,
-        "date_created": "2018-07-19 08:23:03",
-        "default_password": "p4ssw0rd!",
-        "disk": "Virtual 25 GB",
-        "firewallgroup": null,
-        "id": 17241096,
-        "internal_ip": "",
-        "kvm_url": "https://my.vultr.com/subs/vps/novnc/api.php?data=OFB...",
-        "name": "ansibletest",
-        "os": "CentOS 7 x64",
-        "pending_charges": 0.01,
-        "plan": "1024 MB RAM,25 GB SSD,1.00 TB BW",
-        "power_status": "running",
-        "ram": "1024 MB",
-        "region": "Amsterdam",
-        "server_state": "ok",
-        "status": "active",
-        "tag": "",
-        "v4_gateway": "105.178.158.1",
-        "v4_main_ip": "105.178.158.181",
-        "v4_netmask": "255.255.254.0",
-        "v6_main_ip": "",
-        "v6_network": "",
-        "v6_network_size": "",
-        "v6_networks": [],
-        "vcpu_count": 1
-      }
-    ]
+  contains:
+    id:
+      description: ID of the server
+      returned: success
+      type: str
+      sample: 10194376
+    name:
+      description: Name (label) of the server
+      returned: success
+      type: str
+      sample: "ansible-test-vm"
+    plan:
+      description: Plan used for the server
+      returned: success
+      type: str
+      sample: "1024 MB RAM,25 GB SSD,1.00 TB BW"
+    allowed_bandwidth_gb:
+      description: Allowed bandwidth to use in GB
+      returned: success
+      type: int
+      sample: 1000
+    auto_backup_enabled:
+      description: Whether automatic backups are enabled
+      returned: success
+      type: bool
+      sample: false
+    cost_per_month:
+      description: Cost per month for the server
+      returned: success
+      type: float
+      sample: 5.00
+    current_bandwidth_gb:
+      description: Current bandwidth used for the server
+      returned: success
+      type: int
+      sample: 0
+    date_created:
+      description: Date when the server was created
+      returned: success
+      type: str
+      sample: "2017-08-26 12:47:48"
+    default_password:
+      description: Password to login as root into the server
+      returned: success
+      type: str
+      sample: "!p3EWYJm$qDWYaFr"
+    disk:
+      description: Information about the disk
+      returned: success
+      type: str
+      sample: "Virtual 25 GB"
+    v4_gateway:
+      description: IPv4 gateway
+      returned: success
+      type: str
+      sample: "45.32.232.1"
+    internal_ip:
+      description: Internal IP
+      returned: success
+      type: str
+      sample: ""
+    kvm_url:
+      description: URL to the VNC
+      returned: success
+      type: str
+      sample: "https://my.vultr.com/subs/vps/novnc/api.php?data=xyz"
+    region:
+      description: Region the server was deployed into
+      returned: success
+      type: str
+      sample: "Amsterdam"
+    v4_main_ip:
+      description: Main IPv4
+      returned: success
+      type: str
+      sample: "45.32.233.154"
+    v4_netmask:
+      description: Netmask IPv4
+      returned: success
+      type: str
+      sample: "255.255.254.0"
+    os:
+      description: Operating system used for the server
+      returned: success
+      type: str
+      sample: "CentOS 6 x64"
+    firewall_group:
+      description: Firewall group the server is assigned to
+      returned: success and available
+      type: str
+      sample: "CentOS 6 x64"
+    pending_charges:
+      description: Pending charges
+      returned: success
+      type: float
+      sample: 0.01
+    power_status:
+      description: Power status of the server
+      returned: success
+      type: str
+      sample: "running"
+    ram:
+      description: Information about the RAM size
+      returned: success
+      type: str
+      sample: "1024 MB"
+    server_state:
+      description: State about the server
+      returned: success
+      type: str
+      sample: "ok"
+    status:
+      description: Status about the deployment of the server
+      returned: success
+      type: str
+      sample: "active"
+    tag:
+      description: TBD
+      returned: success
+      type: str
+      sample: ""
+    v6_main_ip:
+      description: Main IPv6
+      returned: success
+      type: str
+      sample: ""
+    v6_network:
+      description: Network IPv6
+      returned: success
+      type: str
+      sample: ""
+    v6_network_size:
+      description:  Network size IPv6
+      returned: success
+      type: str
+      sample: ""
+    v6_networks:
+      description: Networks IPv6
+      returned: success
+      type: list
+      sample: []
+    vcpu_count:
+      description: Virtual CPU count
+      returned: success
+      type: int
+      sample: 1
 '''
 
 from ansible.module_utils.basic import AnsibleModule

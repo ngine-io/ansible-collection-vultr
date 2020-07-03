@@ -14,7 +14,7 @@ module: vultr_user
 short_description: Manages users on Vultr.
 description:
   - Create, update and remove users.
-version_added: "1.0.0"
+version_added: "0.1.0"
 author: "René Moser (@resmo)"
 options:
   name:

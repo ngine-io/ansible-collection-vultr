@@ -82,7 +82,6 @@ from ansible.module_utils._text import to_native
 from ..module_utils.vultr import Vultr, VULTR_API_ENDPOINT, VULTR_USER_AGENT
 from ansible.module_utils.six.moves.urllib.parse import quote
 
-
 SCHEMA = {
     'SUBID': dict(key='id'),
     'os': dict(),
@@ -108,8 +107,8 @@ SCHEMA = {
     "APPID": dict()
 }
 
-def _load_conf(path, account):
 
+def _load_conf(path, account):
     if path:
         conf = configparser.ConfigParser()
         conf.read(path)
@@ -142,7 +141,6 @@ def _retrieve_servers(api_key, tag_filter=None):
 
 
 class InventoryModule(BaseInventoryPlugin, Constructable):
-
     NAME = 'ngine_io.vultr.vultr_metal'
 
     def verify_file(self, path):

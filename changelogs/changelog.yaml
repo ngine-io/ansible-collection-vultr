@@ -18,3 +18,5 @@ releases:
       name: vultr_server_baremetal
       namespace: ''
     release_date: '2020-07-03'
+  1.0.0:
+    release_date: '2020-08-16'

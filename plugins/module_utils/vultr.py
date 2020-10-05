@@ -73,7 +73,7 @@ class Vultr:
                                "Error was %s" % (self.module.params.get('api_account'), to_native(e)))
 
         if not self.api_config.get('api_key'):
-            self.module.fail_json(msg="The API key is not speicied. Please refer to the documentation.")
+            self.module.fail_json(msg="No API key was specified. Please refer to the documentation.")
 
         # Common vultr returns
         self.result['vultr_api'] = {

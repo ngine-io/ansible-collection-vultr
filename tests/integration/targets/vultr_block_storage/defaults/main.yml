@@ -2,6 +2,8 @@
 vultr_resource_prefix: "vultr-test-prefix"
 vultr_block_storage_name: "{{ vultr_resource_prefix }}-volume"
 vultr_block_storage_size: 10
+vultr_block_storage_size_2: 12
+vultr_block_storage_size_3: 14
 vultr_block_storage_region: New Jersey
 
 vultr_server_name: "{{ vultr_resource_prefix }}_vm_for_attachment"

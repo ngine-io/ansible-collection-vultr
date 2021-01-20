@@ -95,6 +95,40 @@
     - result.vultr_block_storage.region == "{{ vultr_block_storage_region }}"
     - result.vultr_block_storage.size == 10
 
+# volumes size can only be modified every 60s
+- name: wait about 60s before resizing volume
+  wait_for:
+    timeout: 65
+  
+- name: test resize block storage volume
+  vultr_block_storage:
+    name: "{{ vultr_block_storage_name }}"
+    size: "{{ vultr_block_storage_size_2 }}"
+    region: "{{ vultr_block_storage_region }}"
+  register: result
+- name: verify resize block storage volume
+  assert:
+    that:
+    - result is changed
+    - 'result.vultr_block_storage.size == {{ vultr_block_storage_size_2 | int }}'
+
+# volume size can only be modified every 60s
+- name: wait about 60s before resizing volume
+  wait_for:
+    timeout: 65
+
+- name: test resize block storage volume idempotency
+  vultr_block_storage:
+    name: "{{ vultr_block_storage_name }}"
+    size: "{{ vultr_block_storage_size_2 }}"
+    region: "{{ vultr_block_storage_region }}"
+  register: result
+- name: verify resize block storage volume idempotency
+  assert:
+    that:
+    - not result.changed
+    - 'result.vultr_block_storage.size == {{ vultr_block_storage_size_2 | int }}'
+
 - name: test attaching fails if server id not provided
   vultr_block_storage:
     name: "{{ vultr_block_storage_name }}"
@@ -151,6 +185,25 @@
     that:
       - not result.changed
       - 'result.vultr_block_storage.attached_to_id == {{ result_server_setup.vultr_server.id | int }}'
+
+# volume size can only be modified every 60s
+- name: wait about 60s before resizing volume
+  wait_for:
+    timeout: 65
+
+- name: test resize block storage volume while attaching
+  vultr_block_storage:
+    name: "{{ vultr_block_storage_name }}"
+    size: "{{ vultr_block_storage_size_3 }}"
+    region: "{{ vultr_block_storage_region }}"
+    state: attached
+    attached_to_SUBID: "{{ result_server_setup.vultr_server.id | int }}"
+  register: result
+- name: verify resize block storage volume
+  assert:
+    that:
+    - result is changed
+    - 'result.vultr_block_storage.size == {{ vultr_block_storage_size_3 | int }}'
 
 - name: test attach block volume fails if attached somewhere else
   vultr_block_storage:
@@ -240,7 +293,7 @@
     - result is not changed
 
 # Servers can only be destroyed 5 min after creation
-- name: wait for 5 min before cleanup
+- name: wait for 5 min before destroying server
   wait_for:
 
 - name: cleanup server

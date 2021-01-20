@@ -136,11 +136,13 @@ vultr_block_storage:
       sample: "active"
 
 '''
+from copy import deepcopy
 
 from ansible.module_utils.basic import AnsibleModule
 from ..module_utils.vultr import (
     Vultr,
     vultr_argument_spec,
+    VultrException,
 )
 
 
@@ -217,24 +219,103 @@ class AnsibleVultrBlockStorage(Vultr):
         return volume
 
 
+    def detached_block_storage_volume(self):
+        volume = self.present_block_storage_volume()
+        if volume.get('attached_to_SUBID') is None:
+            return volume
+        
+        self.result['changed'] = True
+        self.result['diff']['before'] = volume
+
+        detached_vol = deepcopy(volume)
+        detached_vol['attached_to_SUBID'] = None
+        self.result['diff']['after'] = detached_vol
+
+        if not self.module.check_mode:
+            data = {
+              'SUBID': volume['SUBID'],
+              'live': self.module.params.get('live_attachment')
+            }
+            self.api_query(
+                path='/v1/block/detach',
+                method='POST',
+                data=data
+            )
+
+        return detached_vol
+        
+
+    def attached_block_storage_volume(self):
+        expected_server = self.module.params.get('attached_to_SUBID')
+        volume = self.present_block_storage_volume()
+        server = volume.get('attached_to_SUBID')
+        if server == expected_server:
+            return volume
+
+        if server is not None:
+            raise VultrException(
+              'Volume already attached to server {}'.format(server)
+            )
+
+        attached_vol = deepcopy(volume)
+        attached_vol['attached_to_SUBID'] = expected_server
+        self.result['diff']['after'] = attached_vol
+        self.result['changed'] = True
+
+        if not self.module.check_mode:
+            data = {
+                'SUBID': attached_vol['SUBID'],
+                # This API call expects a param called attach_to_SUBID,
+                # but all the BlockStorage API response payloads call
+                # this parameter attached_to_SUBID. So we'll standardize
+                # to the latter and attached_to_id, but we'll pass the
+                # expected attach_to_SUBID to this API call.
+                'attach_to_SUBID': expected_server,
+                'live': self.module.params.get('live_attachment'),
+            }
+            self.api_query(
+                path='/v1/block/attach',
+                method='POST',
+                data=data
+            )
+        return attached_vol
+
+
+
 def main():
     argument_spec = vultr_argument_spec()
     argument_spec.update(dict(
         name=dict(type='str', required=True, aliases=['description', 'label']),
         size=dict(type='int'),
         region=dict(type='str'),
-        state=dict(type='str', choices=['present', 'absent'], default='present'),
+        state=dict(
+            type='str',
+            choices=['present', 'absent', 'attached', 'detached'],
+            default='present'
+        ),
+        attached_to_SUBID=dict(type='int', aliases=['attached_to_id']),
+        live_attachment=dict(type='str', choices=['yes', 'no'], default='yes')
     ))
 
     module = AnsibleModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
-        required_if=[['state', 'present', ['size', 'region']]]
+        required_if=[
+            ['state', 'present', ['size', 'region']],
+            ['state', 'detached', ['size', 'region']],
+            ['state', 'attached', ['size', 'region', 'attached_to_SUBID']],
+        ]
     )
 
     vultr_block_storage = AnsibleVultrBlockStorage(module)
-    if module.params.get('state') == "absent":
+
+    desired_state = module.params.get('state')
+    if desired_state == "absent":
         volume = vultr_block_storage.absent_block_storage_volume()
+    elif desired_state == 'attached':
+        volume = vultr_block_storage.attached_block_storage_volume()
+    elif desired_state == 'detached':
+        volume = vultr_block_storage.detached_block_storage_volume()
     else:
         volume = vultr_block_storage.present_block_storage_volume()
 

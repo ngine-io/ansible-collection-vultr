@@ -30,6 +30,9 @@ def vultr_argument_spec():
     )
 
 
+class VultrException(Exception):
+    pass
+
 class Vultr:
 
     def __init__(self, module, namespace):

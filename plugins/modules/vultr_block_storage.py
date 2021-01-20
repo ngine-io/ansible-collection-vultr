@@ -50,7 +50,7 @@ options:
     description:
       - Whether the volume should be attached/detached, even if the server not stopped.
     type: str
-    defaults: yes
+    default: yes
     choices: [ yes, no ]
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
@@ -242,7 +242,6 @@ class AnsibleVultrBlockStorage(Vultr):
                 )
         return volume
 
-
     def detached_block_storage_volume(self):
         volume = self.present_block_storage_volume()
         if volume.get('attached_to_SUBID') is None:
@@ -252,8 +251,8 @@ class AnsibleVultrBlockStorage(Vultr):
 
         if not self.module.check_mode:
             data = {
-              'SUBID': volume['SUBID'],
-              'live': self.module.params.get('live_attachment')
+                'SUBID': volume['SUBID'],
+                'live': self.module.params.get('live_attachment')
             }
             self.api_query(
                 path='/v1/block/detach',
@@ -264,11 +263,10 @@ class AnsibleVultrBlockStorage(Vultr):
             volume = self.get_block_storage_volumes()
         else:
             volume['attached_to_SUBID'] = None
-            
+
         self.result['diff']['after'] = volume
 
         return volume
-        
 
     def attached_block_storage_volume(self):
         expected_server = self.module.params.get('attached_to_SUBID')
@@ -279,7 +277,7 @@ class AnsibleVultrBlockStorage(Vultr):
 
         if server is not None:
             raise VultrException(
-              'Volume already attached to server {}'.format(server)
+                'Volume already attached to server {}'.format(server)
             )
 
         self.result['changed'] = True
@@ -303,9 +301,9 @@ class AnsibleVultrBlockStorage(Vultr):
             volume = self.get_block_storage_volumes()
         else:
             volume['attached_to_SUBID'] = expected_server
-        
+
         self.result['diff']['after'] = volume
-        
+
         return volume
 
     def ensure_volume_size(self, volume, expected_size):
@@ -330,10 +328,8 @@ class AnsibleVultrBlockStorage(Vultr):
                 method='POST',
                 data=data,
             )
-        
+
         return volume
-
-
 
 def main():
     argument_spec = vultr_argument_spec()
@@ -375,8 +371,8 @@ def main():
     expected_size = module.params.get('size')
     if expected_size and desired_state != 'absent':
         volume = vultr_block_storage.ensure_volume_size(
-          volume,
-          expected_size
+            volume,
+            expected_size
         )
 
     result = vultr_block_storage.get_result(volume)

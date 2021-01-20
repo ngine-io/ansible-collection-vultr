@@ -40,11 +40,18 @@ options:
     default: present
     choices: [ present, absent, attached, detached ]
     type: str
-  attached_to_id:
+  attached_to_SUBID:
     description:
       - The ID of the server the volume is attached to.
       - Required if I(state) is attached.
+    aliases: [ attached_to_id ]
+    type: int
+  live_attachment:
+    description:
+      - Whether the volume should be attached/detached, even if the server not stopped.
     type: str
+    defaults: yes
+    choices: [ yes, no ]
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
 

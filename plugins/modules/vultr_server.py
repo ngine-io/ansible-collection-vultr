@@ -56,6 +56,7 @@ options:
       - Whether to send an activation email when the server is ready or not.
       - Only considered on creation.
     type: bool
+    default: false
   private_network_enabled:
     description:
       - Whether to enable private networking or not.

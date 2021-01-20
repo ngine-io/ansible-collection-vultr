@@ -50,8 +50,8 @@ options:
     description:
       - Whether the volume should be attached/detached, even if the server not stopped.
     type: str
-    default: yes
-    choices: [ yes, no ]
+    default: 'yes'
+    choices: [ 'yes', 'no' ]
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
 
@@ -277,7 +277,7 @@ class AnsibleVultrBlockStorage(Vultr):
 
         if server is not None:
             raise VultrException(
-                'Volume already attached to server {}'.format(server)
+                'Volume already attached to server %s' % server
             )
 
         self.result['changed'] = True
@@ -330,6 +330,7 @@ class AnsibleVultrBlockStorage(Vultr):
             )
 
         return volume
+
 
 def main():
     argument_spec = vultr_argument_spec()

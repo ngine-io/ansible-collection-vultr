@@ -165,7 +165,6 @@ from ansible.module_utils.basic import AnsibleModule
 from ..module_utils.vultr import (
     Vultr,
     vultr_argument_spec,
-    VultrException,
 )
 
 

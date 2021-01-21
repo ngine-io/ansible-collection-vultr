@@ -4,10 +4,6 @@ Vultr Collection Release Notes
 
 .. contents:: Topics
 
-v1.1.0
-======
-
-- vultr_block_storage - Included ability to resize, attach and detach volumes.
 
 v1.0.0
 ======

@@ -49,9 +49,8 @@ options:
   live_attachment:
     description:
       - Whether the volume should be attached/detached, even if the server not stopped.
-    type: str
-    default: 'yes'
-    choices: [ 'yes', 'no' ]
+    type: bool
+    default: True
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
 
@@ -252,7 +251,7 @@ class AnsibleVultrBlockStorage(Vultr):
         if not self.module.check_mode:
             data = {
                 'SUBID': volume['SUBID'],
-                'live': self.module.params.get('live_attachment')
+                'live': self.get_yes_or_no('live_attachment')
             }
             self.api_query(
                 path='/v1/block/detach',
@@ -276,8 +275,8 @@ class AnsibleVultrBlockStorage(Vultr):
             return volume
 
         if server is not None:
-            raise VultrException(
-                'Volume already attached to server %s' % server
+            self.module.fail_json(
+                msg='Volume already attached to server %s' % server
             )
 
         self.result['changed'] = True
@@ -291,7 +290,7 @@ class AnsibleVultrBlockStorage(Vultr):
                 # to the latter and attached_to_id, but we'll pass the
                 # expected attach_to_SUBID to this API call.
                 'attach_to_SUBID': expected_server,
-                'live': self.module.params.get('live_attachment'),
+                'live': self.get_yes_or_no('live_attachment'),
             }
             self.api_query(
                 path='/v1/block/attach',
@@ -344,7 +343,7 @@ def main():
             default='present'
         ),
         attached_to_SUBID=dict(type='int', aliases=['attached_to_id']),
-        live_attachment=dict(type='str', choices=['yes', 'no'], default='yes')
+        live_attachment=dict(type='bool', default=True)
     ))
 
     module = AnsibleModule(

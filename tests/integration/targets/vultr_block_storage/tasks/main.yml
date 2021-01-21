@@ -218,6 +218,7 @@
   assert:
     that:
       - result is failed
+      - 'result.msg == "Volume already attached to server {{ result_server_setup.vultr_server.id | int }}"'
 
 - name: test detach block volume in check mode
   vultr_block_storage:

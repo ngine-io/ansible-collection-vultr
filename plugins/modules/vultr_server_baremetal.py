@@ -44,6 +44,7 @@ options:
       - Whether to send an activation email when the server is ready or not.
       - Only considered on creation.
     type: bool
+    default: false
   ipv6_enabled:
     description:
       - Whether to enable IPv6 or not.

@@ -27,6 +27,7 @@ options:
     description:
       - Size of the block storage volume in GB.
       - Required if I(state) is present.
+      - If it's larger than the volume's current size, the volume will be resized.
     type: int
   region:
     description:
@@ -37,8 +38,19 @@ options:
     description:
       - State of the block storage volume.
     default: present
-    choices: [ present, absent ]
+    choices: [ present, absent, attached, detached ]
     type: str
+  attached_to_SUBID:
+    description:
+      - The ID of the server the volume is attached to.
+      - Required if I(state) is attached.
+    aliases: [ attached_to_id ]
+    type: int
+  live_attachment:
+    description:
+      - Whether the volume should be attached/detached, even if the server not stopped.
+    type: bool
+    default: True
 extends_documentation_fragment:
 - ngine_io.vultr.vultr
 
@@ -55,6 +67,19 @@ EXAMPLES = '''
   ngine_io.vultr.vultr_block_storage:
     name: myvolume
     state: absent
+
+- name: Ensure a block storage volume exists and is attached to server 114
+  ngine_io.vultr.vultr_block_storage:
+    name: myvolume
+    state: attached
+    attached_to_id: 114
+    size: 10
+
+- name: Ensure a block storage volume exists and is not attached to any server
+  ngine_io.vultr.vultr_block_storage:
+    name: myvolume
+    state: detached
+    size: 10
 '''
 
 RETURN = '''
@@ -136,7 +161,6 @@ vultr_block_storage:
       sample: "active"
 
 '''
-
 from ansible.module_utils.basic import AnsibleModule
 from ..module_utils.vultr import (
     Vultr,
@@ -216,6 +240,95 @@ class AnsibleVultrBlockStorage(Vultr):
                 )
         return volume
 
+    def detached_block_storage_volume(self):
+        volume = self.present_block_storage_volume()
+        if volume.get('attached_to_SUBID') is None:
+            return volume
+
+        self.result['changed'] = True
+
+        if not self.module.check_mode:
+            data = {
+                'SUBID': volume['SUBID'],
+                'live': self.get_yes_or_no('live_attachment')
+            }
+            self.api_query(
+                path='/v1/block/detach',
+                method='POST',
+                data=data
+            )
+
+            volume = self.get_block_storage_volumes()
+        else:
+            volume['attached_to_SUBID'] = None
+
+        self.result['diff']['after'] = volume
+
+        return volume
+
+    def attached_block_storage_volume(self):
+        expected_server = self.module.params.get('attached_to_SUBID')
+        volume = self.present_block_storage_volume()
+        server = volume.get('attached_to_SUBID')
+        if server == expected_server:
+            return volume
+
+        if server is not None:
+            self.module.fail_json(
+                msg='Volume already attached to server %s' % server
+            )
+
+        self.result['changed'] = True
+
+        if not self.module.check_mode:
+            data = {
+                'SUBID': volume['SUBID'],
+                # This API call expects a param called attach_to_SUBID,
+                # but all the BlockStorage API response payloads call
+                # this parameter attached_to_SUBID. So we'll standardize
+                # to the latter and attached_to_id, but we'll pass the
+                # expected attach_to_SUBID to this API call.
+                'attach_to_SUBID': expected_server,
+                'live': self.get_yes_or_no('live_attachment'),
+            }
+            self.api_query(
+                path='/v1/block/attach',
+                method='POST',
+                data=data
+            )
+            volume = self.get_block_storage_volumes()
+        else:
+            volume['attached_to_SUBID'] = expected_server
+
+        self.result['diff']['after'] = volume
+
+        return volume
+
+    def ensure_volume_size(self, volume, expected_size):
+        curr_size = volume.get('size_gb')
+        # When creating, attaching, or detaching a volume in check_mode,
+        # sadly, size_gb doesn't exist, because those methods return the
+        # result of get_block_storage_volumes, which is {} on check_mode.
+        if curr_size is None or curr_size >= expected_size:
+            # we only resize volumes that are smaller than
+            # expected. There's no shrinking operation.
+            return volume
+
+        self.result['changed'] = True
+
+        volume['size_gb'] = expected_size
+        self.result['diff']['after'] = volume
+
+        if not self.module.check_mode:
+            data = {'SUBID': volume['SUBID'], 'size_gb': expected_size}
+            self.api_query(
+                path='/v1/block/resize',
+                method='POST',
+                data=data,
+            )
+
+        return volume
+
 
 def main():
     argument_spec = vultr_argument_spec()
@@ -223,20 +336,43 @@ def main():
         name=dict(type='str', required=True, aliases=['description', 'label']),
         size=dict(type='int'),
         region=dict(type='str'),
-        state=dict(type='str', choices=['present', 'absent'], default='present'),
+        state=dict(
+            type='str',
+            choices=['present', 'absent', 'attached', 'detached'],
+            default='present'
+        ),
+        attached_to_SUBID=dict(type='int', aliases=['attached_to_id']),
+        live_attachment=dict(type='bool', default=True)
     ))
 
     module = AnsibleModule(
         argument_spec=argument_spec,
         supports_check_mode=True,
-        required_if=[['state', 'present', ['size', 'region']]]
+        required_if=[
+            ['state', 'present', ['size', 'region']],
+            ['state', 'detached', ['size', 'region']],
+            ['state', 'attached', ['size', 'region', 'attached_to_SUBID']],
+        ]
     )
 
     vultr_block_storage = AnsibleVultrBlockStorage(module)
-    if module.params.get('state') == "absent":
+
+    desired_state = module.params.get('state')
+    if desired_state == "absent":
         volume = vultr_block_storage.absent_block_storage_volume()
+    elif desired_state == 'attached':
+        volume = vultr_block_storage.attached_block_storage_volume()
+    elif desired_state == 'detached':
+        volume = vultr_block_storage.detached_block_storage_volume()
     else:
         volume = vultr_block_storage.present_block_storage_volume()
+
+    expected_size = module.params.get('size')
+    if expected_size and desired_state != 'absent':
+        volume = vultr_block_storage.ensure_volume_size(
+            volume,
+            expected_size
+        )
 
     result = vultr_block_storage.get_result(volume)
     module.exit_json(**result)

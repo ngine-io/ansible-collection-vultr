@@ -20,3 +20,11 @@ releases:
     release_date: '2020-07-03'
   1.0.0:
     release_date: '2020-08-16'
+  1.1.0:
+    changes:
+      minor_changes:
+      - vultr_block_storage - Included ability to resize, attach and detach Block
+        Storage Volumes.
+    fragments:
+    - 14-attach-detach-and-resize-volumes.yml
+    release_date: '2021-02-02'

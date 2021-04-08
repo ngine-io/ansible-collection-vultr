@@ -1,7 +1,11 @@
 name: Sanity
 on:
   schedule:
+<<<<<<< HEAD
   - cron: "5 12 * * *"
+=======
+  - cron: "53 12 * * *"
+>>>>>>> sanity: fix run daily
   pull_request:
 
 jobs:

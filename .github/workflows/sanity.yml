@@ -1,7 +1,9 @@
 name: Sanity
 on:
-- pull_request
-
+  schedule:
+  - cron: "5 12 * * *"
+  pull_request:
+  
 jobs:
   sanity:
     name: Sanity (${{ matrix.ansible }})

@@ -897,7 +897,7 @@ def main():
         firewall_group=dict(type='str'),
         startup_script=dict(type='str'),
         user_data=dict(type='str'),
-        ssh_keys=dict(type='list', elements='str', aliases=['ssh_key']),
+        ssh_keys=dict(type='list', elements='str', aliases=['ssh_key'], no_log=False),
         region=dict(type='str'),
         state=dict(choices=['present', 'absent', 'restarted', 'reinstalled', 'started', 'stopped'], default='present'),
     ))

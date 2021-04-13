@@ -210,7 +210,7 @@ def main():
     argument_spec = vultr_argument_spec()
     argument_spec.update(dict(
         name=dict(type='str', required=True),
-        ssh_key=dict(type='str',),
+        ssh_key=dict(type='str', no_log=False),
         state=dict(type='str', choices=['present', 'absent'], default='present'),
     ))
 

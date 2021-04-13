@@ -524,7 +524,7 @@ def main():
         reserved_ip_v4=dict(type='str',),
         startup_script=dict(type='str',),
         user_data=dict(type='str',),
-        ssh_keys=dict(type='list', elements='str', aliases=['ssh_key']),
+        ssh_keys=dict(type='list', elements='str', aliases=['ssh_key'], no_log=False),
         region=dict(type='str',),
         state=dict(type='str', choices=['present', 'absent'], default='present'),
     ))

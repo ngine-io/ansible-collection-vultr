@@ -148,12 +148,14 @@ class AnsibleVultr:
             if resource:
                 return resource[self.ressource_result_key_singular]
         else:
-            resources = self.api_query(path=self.resource_path)
-            if resources:
-                for resource in resources[self.ressource_result_key_plural]:
-                    if resource.get(self.resource_key_name) == self.module.params.get(self.resource_key_name):
-                        return resource
+            for resource in self.query_list():
+                if resource.get(self.resource_key_name) == self.module.params.get(self.resource_key_name):
+                    return resource
         return dict()
+
+    def query_list(self):
+        resources = self.api_query(path=self.resource_path)
+        return resources[self.ressource_result_key_plural] if resources else []
 
     def present(self):
         resource = self.query()

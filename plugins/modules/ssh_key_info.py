@@ -1,0 +1,122 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+# Copyright (c) 2018, Yanis Guenane <yanis+ansible@guenane.org>
+# Copyright (c) 2021, René Moser <mail@renemoser.net>
+
+# GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
+
+from __future__ import (absolute_import, division, print_function)
+__metaclass__ = type
+
+
+DOCUMENTATION = '''
+---
+module: ssh_key_info
+short_description: Get information about the Vultr SSH keys available.
+description:
+  - Get infos about SSH keys available.
+version_added: "2.0.0"
+author:
+  - "Yanis Guenane (@Spredzy)"
+  - "René Moser (@resmo)"
+extends_documentation_fragment:
+- ngine_io.vultr.vultr_v2
+
+'''
+
+EXAMPLES = '''
+- name: Get Vultr SSH keys infos
+  ngine_io.vultr.ssh_key_info:
+  register: result
+
+- name: Print the infos
+  debug:
+    var: result.ssh_key_info
+'''
+
+RETURN = '''
+---
+vultr_api:
+  description: Response from Vultr API with a few additions/modification
+  returned: success
+  type: complex
+  contains:
+    api_account:
+      description: Account used in the ini file to select the key
+      returned: success
+      type: str
+      sample: default
+    api_timeout:
+      description: Timeout used for the API requests
+      returned: success
+      type: int
+      sample: 60
+    api_retries:
+      description: Amount of max retries for the API requests
+      returned: success
+      type: int
+      sample: 5
+    api_retry_max_delay:
+      description: Exponential backoff delay in seconds between retries up to this max delay value.
+      returned: success
+      type: int
+      sample: 12
+    api_endpoint:
+      description: Endpoint used for the API requests
+      returned: success
+      type: str
+      sample: "https://api.vultr.com"
+vultr_ssh_key_info:
+  description: Response from Vultr API as list
+  returned: success
+  type: complex
+  contains:
+    id:
+      description: ID of the ssh key
+      returned: success
+      type: str
+      sample: 5904bc6ed9234
+    name:
+      description: Name of the ssh key
+      returned: success
+      type: str
+      sample: my ssh key
+    date_created:
+      description: Date the ssh key was created
+      returned: success
+      type: str
+      sample: "2017-08-26 12:47:48"
+    ssh_key:
+      description: SSH public key
+      returned: success
+      type: str
+      sample: "ssh-rsa AA... someother@example.com"
+'''
+
+from ansible.module_utils.basic import AnsibleModule
+from ..module_utils.vultr_v2 import (
+    AnsibleVultr,
+    vultr_argument_spec,
+)
+
+def main():
+    argument_spec = vultr_argument_spec()
+
+    module = AnsibleModule(
+        argument_spec=argument_spec,
+        supports_check_mode=True,
+    )
+
+    vultr_ssh_key = AnsibleVultr(
+          module=module,
+          namespace="vultr_ssh_key_info",
+          resource_path = "/ssh-keys",
+          ressource_result_key_singular="ssh_key",
+      )
+
+    vultr_ssh_key.get_result(vultr_ssh_key.query_list())
+
+
+if __name__ == '__main__':
+    main()

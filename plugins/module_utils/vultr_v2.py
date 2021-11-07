@@ -186,7 +186,7 @@ class AnsibleVultr:
     def is_diff(self, data, resource):
         for key, value in data.items():
             if value is not None:
-                if resource.get(key) != value:
+                if resource[key] != value:
                     return True
         return False
 

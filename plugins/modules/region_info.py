@@ -15,7 +15,7 @@ module: region_info
 short_description: Gather information about the Vultr regions available.
 description:
   - Gather information about regions available to boot servers.
-version_added: "0.1.0"
+version_added: "2.0.0"
 author:
   - "Yanis Guenane (@Spredzy)"
   - "René Moser (@resmo)"
@@ -106,6 +106,7 @@ def main():
     )
 
     vultr.get_result(vultr.query_list())
+
 
 if __name__ == '__main__':
     main()

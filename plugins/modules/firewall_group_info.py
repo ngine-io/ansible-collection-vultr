@@ -83,7 +83,7 @@ vultr_firewall_group_info:
       description: Date the firewall group was created
       returned: success
       type: str
-      sample: "2017-08-26 12:47:48"
+      sample: 2020-10-10T01:56:20+00:00
     date_modified:
       description: Date the firewall group was modified
       returned: success

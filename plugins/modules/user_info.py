@@ -30,7 +30,7 @@ EXAMPLES = '''
 
 - name: Print the infos
   debug:
-    var: result.user_info
+    var: result.vultr_user_info
 '''
 
 RETURN = '''
@@ -107,7 +107,6 @@ from ..module_utils.vultr_v2 import (
     AnsibleVultr,
     vultr_argument_spec,
 )
-
 
 def main():
     argument_spec = vultr_argument_spec()

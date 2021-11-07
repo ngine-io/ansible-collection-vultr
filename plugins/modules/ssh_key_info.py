@@ -32,7 +32,7 @@ EXAMPLES = '''
 
 - name: Print the infos
   debug:
-    var: result.ssh_key_info
+    var: result.vultr_ssh_key_info
 '''
 
 RETURN = '''

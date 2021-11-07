@@ -29,7 +29,7 @@ EXAMPLES = '''
 
 - name: Print the gathered information
   debug:
-    var: result.dns_domain_info
+    var: result.vultr_dns_domain_info
 '''
 
 RETURN = '''

@@ -110,7 +110,6 @@ from ..module_utils.vultr_v2 import (
     vultr_argument_spec,
 )
 
-
 def main():
     argument_spec = vultr_argument_spec()
     argument_spec.update(dict(

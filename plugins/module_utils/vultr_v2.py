@@ -142,12 +142,17 @@ class AnsibleVultr:
             fetch_url_info=info
         )
 
-    def query(self):
-        resources = self.api_query(path=self.resource_path)
-        if resources:
-            for resource in resources[self.ressource_result_key_plural]:
-                if resource.get(self.resource_key_name) == self.module.params.get(self.resource_key_name):
-                    return resource
+    def query(self, resource_id=None):
+        if resource_id is not None:
+            resource = self.api_query(path="%s/%s" % (self.resource_path, resource_id))
+            if resource:
+                return resource[self.ressource_result_key_singular]
+        else:
+            resources = self.api_query(path=self.resource_path)
+            if resources:
+                for resource in resources[self.ressource_result_key_plural]:
+                    if resource.get(self.resource_key_name) == self.module.params.get(self.resource_key_name):
+                        return resource
         return dict()
 
     def present(self):
@@ -179,7 +184,7 @@ class AnsibleVultr:
     def is_diff(self, data, resource):
         for key, value in data.items():
             if value is not None:
-                if not resource.get(key) or resource.get(key) != value:
+                if resource.get(key) != value:
                     return True
         return False
 
@@ -201,8 +206,7 @@ class AnsibleVultr:
                     method="PATCH",
                     data=data,
                 )
-                # TODO: query by ID
-                resource = self.query()
+                resource = self.query(resource_id=resource['id'])
 
         return self.get_result(resource)
 

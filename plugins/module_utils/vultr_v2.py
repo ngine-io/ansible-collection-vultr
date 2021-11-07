@@ -144,7 +144,7 @@ class AnsibleVultr:
 
     def query(self, resource_id=None):
         if resource_id is not None:
-            resource = self.api_query(path="%s/%s" % (self.resource_path, resource_id))
+            resource = self.api_query(path="%s%s" % (self.resource_path, "/" + resource_id if resource_id else resource_id))
             if resource:
                 return resource[self.ressource_result_key_singular]
         else:

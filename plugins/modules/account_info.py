@@ -1,9 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, Yanis Guenane <yanis+ansible@guenane.org>
 # Copyright (c) 2021, René Moser <mail@renemoser.net>
-
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
 from __future__ import (absolute_import, division, print_function)
@@ -12,27 +10,24 @@ __metaclass__ = type
 
 DOCUMENTATION = '''
 ---
-module: ssh_key_info
-short_description: Get information about the Vultr SSH keys available.
+module: account_info
+short_description: Get information about the Vultr account.
 description:
-  - Get infos about SSH keys available.
+  - Get infos about account balance, charges and payments.
 version_added: "2.0.0"
-author:
-  - "Yanis Guenane (@Spredzy)"
-  - "René Moser (@resmo)"
+author: "René Moser (@resmo)"
 extends_documentation_fragment:
 - ngine_io.vultr.vultr_v2
-
 '''
 
 EXAMPLES = '''
-- name: Get Vultr SSH keys infos
-  ngine_io.vultr.ssh_key_info:
+- name: Get Vultr account infos
+  ngine_io.vultr.account_info:
   register: result
 
 - name: Print the infos
   debug:
-    var: result.ssh_key_info
+    var: result.vultr_account_info
 '''
 
 RETURN = '''
@@ -67,31 +62,31 @@ vultr_api:
       returned: success
       type: str
       sample: "https://api.vultr.com"
-vultr_ssh_key_info:
-  description: Response from Vultr API as list
+vultr_account_info:
+  description: Response from Vultr API
   returned: success
   type: complex
   contains:
-    id:
-      description: ID of the ssh key
+    balance:
+      description: Your account balance.
       returned: success
-      type: str
-      sample: 5904bc6ed9234
-    name:
-      description: Name of the ssh key
+      type: float
+      sample: -214.69
+    pending_charges:
+      description: Charges pending.
       returned: success
-      type: str
-      sample: my ssh key
-    date_created:
-      description: Date the ssh key was created
+      type: float
+      sample: 57.03
+    last_payment_date:
+      description: Date of the last payment.
       returned: success
       type: str
       sample: "2021-11-07T05:57:59-05:00"
-    ssh_key:
-      description: SSH public key
+    last_payment_amount:
+      description: The amount of the last payment transaction.
       returned: success
-      type: str
-      sample: "ssh-rsa AA... someother@example.com"
+      type: float
+      sample: -250.0
 '''
 
 from ansible.module_utils.basic import AnsibleModule
@@ -110,12 +105,12 @@ def main():
 
     vultr_ssh_key = AnsibleVultr(
           module=module,
-          namespace="vultr_ssh_key_info",
-          resource_path = "/ssh-keys",
-          ressource_result_key_singular="ssh_key",
+          namespace="vultr_account_info",
+          resource_path = "/account",
+          ressource_result_key_singular="account",
       )
 
-    vultr_ssh_key.get_result(vultr_ssh_key.query_list())
+    vultr_ssh_key.get_result(vultr_ssh_key.query(resource_id=""))
 
 
 if __name__ == '__main__':

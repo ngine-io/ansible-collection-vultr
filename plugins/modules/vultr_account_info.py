@@ -62,7 +62,7 @@ vultr_api:
       description: Endpoint used for the API requests
       returned: success
       type: str
-      sample: "https://api.vultr.com"
+      sample: "https://api.vultr.com/v2"
 vultr_account_info:
   description: Response from Vultr API
   returned: success

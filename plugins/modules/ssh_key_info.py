@@ -66,7 +66,7 @@ vultr_api:
       description: Endpoint used for the API requests
       returned: success
       type: str
-      sample: "https://api.vultr.com"
+      sample: "https://api.vultr.com/v2"
 vultr_ssh_key_info:
   description: Response from Vultr API as list
   returned: success
@@ -108,14 +108,14 @@ def main():
         supports_check_mode=True,
     )
 
-    vultr_ssh_key = AnsibleVultr(
+    vultr = AnsibleVultr(
           module=module,
           namespace="vultr_ssh_key_info",
           resource_path = "/ssh-keys",
           ressource_result_key_singular="ssh_key",
       )
 
-    vultr_ssh_key.get_result(vultr_ssh_key.query_list())
+    vultr.get_result(vultr.query_list())
 
 
 if __name__ == '__main__':

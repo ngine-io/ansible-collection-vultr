@@ -127,7 +127,7 @@ def main():
         supports_check_mode=True,
     )
 
-    vultr_ssh_key = AnsibleVultr(
+    vultr = AnsibleVultr(
           module=module,
           namespace="vultr_ssh_key",
           resource_path = "/ssh-keys",
@@ -137,9 +137,9 @@ def main():
       )
 
     if module.params.get('state') == "absent":
-        vultr_ssh_key.absent()
+        vultr.absent()
     else:
-        vultr_ssh_key.present()
+        vultr.present()
 
 
 if __name__ == '__main__':

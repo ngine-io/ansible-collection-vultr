@@ -1,6 +1,6 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 #
-# Copyright (c) 2018, Yanis Guenane <yanis+ansible@guenane.org>
 # Copyright (c) 2021, René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
@@ -10,26 +10,38 @@ __metaclass__ = type
 
 DOCUMENTATION = '''
 ---
-module: firewall_group_info
-short_description: Gather information about the Vultr firewall groups available.
+module: firewall_group
+short_description: Manages firewall groups on Vultr.
 description:
-  - Gather information about firewall groups available in Vultr.
+  - Create and remove firewall groups.
 version_added: "2.0.0"
-author:
-  - "Yanis Guenane (@Spredzy)"
-  - "René Moser (@resmo)"
+author: "René Moser (@resmo)"
+options:
+  description:
+    description:
+      - Description of the firewall group.
+    required: true
+    aliases: [ name ]
+    type: str
+  state:
+    description:
+      - State of the firewall group.
+    default: present
+    choices: [ present, absent ]
+    type: str
 extends_documentation_fragment:
 - ngine_io.vultr.vultr_v2
 '''
 
 EXAMPLES = '''
-- name: Gather Vultr firewall groups information
-  ngine_io.vultr.firewall_group_info:
-  register: result
+- name: ensure a firewall group is present
+  ngine_io.vultr.firewall_group:
+    description: my http firewall
 
-- name: Print the gathered information
-  debug:
-    var: result.vultr_firewall_group_info
+- name: ensure a firewall group is absent
+  ngine_io.vultr.firewall_group:
+    description: my http firewall
+    state: absent
 '''
 
 RETURN = '''
@@ -64,7 +76,7 @@ vultr_api:
       returned: success
       type: str
       sample: "https://api.vultr.com/v2"
-vultr_firewall_group_info:
+vultr_firewall_group:
   description: Response from Vultr API
   returned: success
   type: complex
@@ -75,7 +87,7 @@ vultr_firewall_group_info:
       type: str
       sample: cb676a46-66fd-4dfb-b839-443f2e6c0b60
     description:
-      description: Name of the firewall group
+      description: Description (name) of the firewall group
       returned: success
       type: str
       sample: my firewall group
@@ -97,8 +109,13 @@ from ..module_utils.vultr_v2 import (
     vultr_argument_spec,
 )
 
+
 def main():
     argument_spec = vultr_argument_spec()
+    argument_spec.update(dict(
+        description=dict(type='str', required=True, aliases=['name']),
+        state=dict(type='str', choices=['present', 'absent'], default='present'),
+    ))
 
     module = AnsibleModule(
         argument_spec=argument_spec,
@@ -107,14 +124,18 @@ def main():
 
     vultr = AnsibleVultr(
           module=module,
-          namespace="vultr_firewall_group_info",
+          namespace="vultr_firewall_group",
           resource_path = "/firewalls",
           ressource_result_key_singular="firewall_group",
-    )
+          resource_create_param_keys=['description'],
+          resource_update_param_keys=['description'],
+          resource_key_name="description",
+      )
 
-    vultr.get_result(vultr.query_list())
-
+    if module.params.get('state') == "absent":
+        vultr.absent()
+    else:
+        vultr.present()
 
 if __name__ == '__main__':
     main()
-g

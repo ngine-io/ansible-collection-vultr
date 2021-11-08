@@ -59,6 +59,7 @@ class AnsibleVultr:
         ressource_result_key_singular,
         ressource_result_key_plural=None,
         resource_key_name="name",
+        resource_key_id="id",
         resource_create_param_keys=None,
         resource_update_param_keys=None,
 
@@ -78,6 +79,9 @@ class AnsibleVultr:
 
         # The name key of the resource, usually 'name'
         self.resource_key_name = resource_key_name
+
+        # The name key of the resource, usually 'id'
+        self.resource_key_id = resource_key_id
 
         # List of params used to create the resource
         self.resource_create_param_keys = resource_create_param_keys or ['name']
@@ -204,11 +208,11 @@ class AnsibleVultr:
 
             if not self.module.check_mode:
                 self.api_query(
-                    path="%s/%s" % (self.resource_path, resource['id']),
+                    path="%s/%s" % (self.resource_path, resource[self.resource_key_id]),
                     method="PATCH",
                     data=data,
                 )
-                resource = self.query(resource_id=resource['id'])
+                resource = self.query(resource_id=resource[self.resource_key_id])
 
         return self.get_result(resource)
 
@@ -222,7 +226,7 @@ class AnsibleVultr:
 
             if not self.module.check_mode:
                 self.api_query(
-                    path="%s/%s" % (self.resource_path, resource['id']),
+                    path="%s/%s" % (self.resource_path, resource[self.resource_key_id]),
                     method="DELETE",
                 )
         return self.get_result(resource)

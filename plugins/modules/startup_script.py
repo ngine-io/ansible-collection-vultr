@@ -140,17 +140,29 @@ from ..module_utils.vultr_v2 import (
 
 class AnsibleVultrStartupScript(AnsibleVultr):
 
-  def query(self, resource_id=None):
-      resource = super(AnsibleVultrStartupScript, self).query(resource_id=resource_id)
-      if resource and 'script' not in resource:
-          resource = super(AnsibleVultrStartupScript, self).query(resource_id=resource['id'])
-      return resource
+    def query(self, resource_id=None):
+        resource = super(AnsibleVultrStartupScript, self).query(resource_id=resource_id)
+        if resource and 'script' not in resource:
+            resource = super(AnsibleVultrStartupScript, self).query(resource_id=resource['id'])
+        return resource
 
-  def get_result(self, resource):
-      if resource:
-          resource['script'] = base64.b64decode(resource['script']).decode()
-      self.result[self.namespace] = resource
-      self.module.exit_json(**self.result)
+    def is_diff(self, data, resource):
+        for key, value in data.items():
+            if value is not None:
+                try:
+                    value = value.decode()
+                except (UnicodeDecodeError, AttributeError):
+                    pass
+
+                if resource[key] != value:
+                    return True
+        return False
+
+    def get_result(self, resource):
+        if resource:
+            resource['script'] = base64.b64decode(resource['script']).decode()
+        self.result[self.namespace] = resource
+        self.module.exit_json(**self.result)
 
 
 def main():

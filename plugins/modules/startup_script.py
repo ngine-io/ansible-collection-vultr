@@ -103,7 +103,7 @@ vultr_startup_script:
       description: ID of the startup script.
       returned: success
       type: str
-      sample: 249395
+      sample: 7d726ffe-9be2-4f88-8cda-fa7eba1da2b5
     name:
       description: Name of the startup script.
       returned: success

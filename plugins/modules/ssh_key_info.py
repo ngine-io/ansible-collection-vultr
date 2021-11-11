@@ -76,7 +76,7 @@ vultr_ssh_key_info:
       description: ID of the ssh key
       returned: success
       type: str
-      sample: 5904bc6ed9234
+      sample: 7d726ffe-9be2-4f88-8cda-fa7eba1da2b5
     name:
       description: Name of the ssh key
       returned: success

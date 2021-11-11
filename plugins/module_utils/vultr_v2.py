@@ -164,9 +164,10 @@ class AnsibleVultr:
     def present(self):
         resource = self.query()
         if not resource:
-            self.create()
+            resource = self.create()
         else:
-            self.update(resource)
+            resource = self.update(resource)
+        self.get_result(resource)
 
     def create(self):
         data = dict()
@@ -185,13 +186,18 @@ class AnsibleVultr:
                 method="POST",
                 data=data,
             )
-        return self.get_result(resource.get(self.ressource_result_key_singular) if resource else dict())
+        return resource.get(self.ressource_result_key_singular) if resource else dict()
 
     def is_diff(self, data, resource):
         for key, value in data.items():
-            if value is not None:
-                if resource[key] != value:
-                    return True
+            if value is None:
+                continue
+            elif isinstance(value, list):
+                for v in value:
+                    if v not in resource[key]:
+                        return True
+            elif resource[key] != value:
+                return True
         return False
 
     def update(self, resource):
@@ -213,8 +219,7 @@ class AnsibleVultr:
                     data=data,
                 )
                 resource = self.query(resource_id=resource[self.resource_key_id])
-
-        return self.get_result(resource)
+        return resource
 
     def absent(self):
         resource = self.query()
@@ -229,7 +234,7 @@ class AnsibleVultr:
                     path="%s/%s" % (self.resource_path, resource[self.resource_key_id]),
                     method="DELETE",
                 )
-        return self.get_result(resource)
+        self.get_result(resource)
 
     def get_result(self, resource):
         self.result[self.namespace] = resource

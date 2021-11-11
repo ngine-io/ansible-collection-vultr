@@ -74,7 +74,7 @@ vultr_user_info:
       description: ID of the user.
       returned: success
       type: str
-      sample: 5904bc6ed9234
+      sample: 7d726ffe-9be2-4f88-8cda-fa7eba1da2b5
     api_key:
       description: API key of the user.
       returned: only after resource was created

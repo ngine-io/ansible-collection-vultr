@@ -3,7 +3,7 @@
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 ---
 - name: Create the user
-  vultr_user:
+  ngine_io.vultr.user:
     name: '{{ user_name }}'
     email: '{{ user_email }}'
     password: '{{ user_password }}'
@@ -29,6 +29,6 @@
     - result.vultr_user_info|selectattr('name','equalto','{{ user_name }}') | list | count == 1
 
 - name: Delete the user
-  vultr_user:
+  ngine_io.vultr.user:
     name: '{{ user_name }}'
     state: absent

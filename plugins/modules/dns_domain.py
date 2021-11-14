@@ -30,6 +30,12 @@ options:
       - Required if C(state=present).
     type: str
     aliases: [ server_ip ]
+  dns_sec:
+    description:
+      - Ensure DNSSEC is enabled or disabled.
+    type: str
+    choices: [ enabled, disabled ]
+    default: disabled
   state:
     description:
       - State of the DNS domain.
@@ -41,9 +47,10 @@ extends_documentation_fragment:
 '''
 
 EXAMPLES = '''
-- name: Ensure a domain exists
+- name: Ensure a domain exists with DNSSEC
   ngine_io.vultr.dns_domain:
     name: example.com
+    dns_sec: enabled
     server_ip: 10.10.10.10
 
 - name: Ensure a domain is absent
@@ -94,6 +101,11 @@ vultr_dns_domain:
       returned: success
       type: str
       sample: example.com
+    dns_sec:
+      description: Whether DNSSEC is enabled or disabled.
+      returned: success
+      type: str
+      sample: disabled
     date_created:
       description: Date the DNS domain was created.
       returned: success
@@ -112,6 +124,7 @@ def main():
     argument_spec.update(dict(
         domain=dict(type='str', required=True, aliases=['name']),
         ip=dict(type='str', aliases=['server_ip']),
+        dns_sec=dict(type='str', choices=['enabled', 'disabled'], default='disabled'),
         state=dict(type='str', choices=['present', 'absent'], default='present'),
     ))
 
@@ -128,10 +141,12 @@ def main():
           namespace="vultr_dns_domain",
           resource_path = "/domains",
           ressource_result_key_singular="domain",
-          resource_create_param_keys=['domain', 'ip',],
-          resource_update_param_keys=['domain'],
+          resource_create_param_keys=['domain', 'dns_sec', 'ip',],
+          resource_update_param_keys=['domain', 'dns_sec'],
           resource_key_name="domain",
           resource_key_id="domain",
+          resource_get_details=True,
+          resource_update_method="PUT",
       )
 
     if module.params.get('state') == "absent":

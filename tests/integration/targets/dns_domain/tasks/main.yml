@@ -35,6 +35,7 @@
 - name: test create dns domain in check mode
   ngine_io.vultr.dns_domain:
     name: "{{ vultr_dns_domain_name }}"
+    dns_sec: enabled
     server_ip: 10.10.10.10
   register: result
   check_mode: yes
@@ -46,6 +47,7 @@
 - name: test create dns domain
   ngine_io.vultr.dns_domain:
     name: "{{ vultr_dns_domain_name }}"
+    dns_sec: enabled
     server_ip: 10.10.10.10
   register: result
 - name: verify test create dns domain
@@ -53,10 +55,12 @@
     that:
     - result is changed
     - result.vultr_dns_domain.domain == '{{ vultr_dns_domain_name }}'
+    - result.vultr_dns_domain.dns_sec == 'enabled'
 
 - name: test create dns domain idempotence
   ngine_io.vultr.dns_domain:
     name: "{{ vultr_dns_domain_name }}"
+    dns_sec: enabled
     server_ip: 10.10.10.10
   register: result
 - name: verify test create dns domain idempotence
@@ -64,6 +68,46 @@
     that:
     - result is not changed
     - result.vultr_dns_domain.domain == '{{ vultr_dns_domain_name }}'
+    - result.vultr_dns_domain.dns_sec == 'enabled'
+
+- name: test update dns domain in check mode
+  ngine_io.vultr.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+    dns_sec: disabled
+    server_ip: 10.10.10.10
+  register: result
+  check_mode: yes
+- name: verify test create dns domain in check mode
+  assert:
+    that:
+    - result is changed
+    - result.vultr_dns_domain.dns_sec == 'enabled'
+
+- name: test update dns domain
+  ngine_io.vultr.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+    dns_sec: disabled
+    server_ip: 10.10.10.10
+  register: result
+- name: verify test create dns domain
+  assert:
+    that:
+    - result is changed
+    - result.vultr_dns_domain.domain == '{{ vultr_dns_domain_name }}'
+    - result.vultr_dns_domain.dns_sec == 'disabled'
+
+- name: test update dns domain idempotence
+  ngine_io.vultr.dns_domain:
+    name: "{{ vultr_dns_domain_name }}"
+    dns_sec: disabled
+    server_ip: 10.10.10.10
+  register: result
+- name: verify test create dns domain idempotence
+  assert:
+    that:
+    - result is not changed
+    - result.vultr_dns_domain.domain == '{{ vultr_dns_domain_name }}'
+    - result.vultr_dns_domain.dns_sec == 'disabled'
 
 - name: test absent dns domain in check mode
   ngine_io.vultr.dns_domain:

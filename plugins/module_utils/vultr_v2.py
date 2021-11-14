@@ -63,6 +63,7 @@ class AnsibleVultr:
         resource_get_details=False,
         resource_create_param_keys=None,
         resource_update_param_keys=None,
+        resource_update_method="PATCH",
         ):
 
         self.module = module
@@ -91,6 +92,9 @@ class AnsibleVultr:
 
         # List of params used to update the resource
         self.resource_update_param_keys = resource_update_param_keys or ['name']
+
+        # Some resources have PUT, many have PATCH
+        self.resource_update_method = resource_update_method
 
         self.result = {
             'changed': False,
@@ -170,8 +174,13 @@ class AnsibleVultr:
         resource = self.query()
         if not resource:
             resource = self.create()
+
+            #TODO: remove after fix dns_sec in domain returned
+            if resource and self.resource_get_details:
+                resource = self.query(resource_id=resource[self.resource_key_id])
         else:
             resource = self.update(resource)
+
         self.get_result(resource)
 
     def create(self):
@@ -220,7 +229,7 @@ class AnsibleVultr:
             if not self.module.check_mode:
                 self.api_query(
                     path="%s/%s" % (self.resource_path, resource[self.resource_key_id]),
-                    method="PATCH",
+                    method=self.resource_update_method,
                     data=data,
                 )
                 resource = self.query(resource_id=resource[self.resource_key_id])

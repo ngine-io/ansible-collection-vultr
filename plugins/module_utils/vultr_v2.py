@@ -60,9 +60,9 @@ class AnsibleVultr:
         ressource_result_key_plural=None,
         resource_key_name="name",
         resource_key_id="id",
+        resource_get_details=False,
         resource_create_param_keys=None,
         resource_update_param_keys=None,
-
         ):
 
         self.module = module
@@ -82,6 +82,9 @@ class AnsibleVultr:
 
         # The name key of the resource, usually 'id'
         self.resource_key_id = resource_key_id
+
+        # Some resources need an additional GET request to get all attributes
+        self.resource_get_details = resource_get_details
 
         # List of params used to create the resource
         self.resource_create_param_keys = resource_create_param_keys or ['name']
@@ -154,6 +157,8 @@ class AnsibleVultr:
         else:
             for resource in self.query_list():
                 if resource.get(self.resource_key_name) == self.module.params.get(self.resource_key_name):
+                    if self.resource_get_details:
+                        return self.query(resource_id=resource[self.resource_key_id])
                     return resource
         return dict()
 

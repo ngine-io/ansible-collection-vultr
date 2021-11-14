@@ -140,12 +140,6 @@ from ..module_utils.vultr_v2 import (
 
 class AnsibleVultrStartupScript(AnsibleVultr):
 
-    def query(self, resource_id=None):
-        resource = super(AnsibleVultrStartupScript, self).query(resource_id=resource_id)
-        if resource and 'script' not in resource:
-            resource = super(AnsibleVultrStartupScript, self).query(resource_id=resource['id'])
-        return resource
-
     def is_diff(self, data, resource):
         for key, value in data.items():
             if value is not None:
@@ -187,6 +181,7 @@ def main():
           namespace="vultr_startup_script",
           resource_path = "/startup-scripts",
           ressource_result_key_singular="startup_script",
+          resource_get_details=True,
           resource_create_param_keys=['name', 'type', 'script'],
           resource_update_param_keys=['name', 'script'],
       )

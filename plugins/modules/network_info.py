@@ -39,11 +39,6 @@ vultr_api:
   returned: success
   type: complex
   contains:
-    api_account:
-      description: Account used in the ini file to select the key
-      returned: success
-      type: str
-      sample: default
     api_timeout:
       description: Timeout used for the API requests
       returned: success
@@ -73,7 +68,7 @@ vultr_network_info:
       description: ID of the network
       returned: success
       type: str
-      sample: "net5b62c6dc63ef5"
+      sample: "cb676a46-66fd-4dfb-b839-443f2e6c0b60"
     description:
       description: Description (name) of the network
       returned: success

@@ -66,11 +66,6 @@ vultr_api:
   returned: success
   type: complex
   contains:
-    api_account:
-      description: Account used in the ini file to select the key
-      returned: success
-      type: str
-      sample: default
     api_timeout:
       description: Timeout used for the API requests
       returned: success

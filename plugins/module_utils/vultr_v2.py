@@ -159,11 +159,20 @@ class AnsibleVultr:
             if resource:
                 return resource[self.ressource_result_key_singular]
         else:
+            found = dict()
             for resource in self.query_list():
                 if resource.get(self.resource_key_name) == self.module.params.get(self.resource_key_name):
-                    if self.resource_get_details:
-                        return self.query(resource_id=resource[self.resource_key_id])
-                    return resource
+                    if found:
+                        self.module.fail_json(
+                            msg="More than one record with name=%s found. "
+                            "Use multiple=yes if module supports it." % resource.get(self.resource_key_name))
+                    found = resource
+
+            if found:
+                if self.resource_get_details:
+                    return self.query(resource_id=found[self.resource_key_id])
+                else:
+                    return found
         return dict()
 
     def query_list(self):

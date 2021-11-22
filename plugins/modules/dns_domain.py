@@ -140,7 +140,6 @@ def main():
           resource_update_param_keys=['domain', 'dns_sec'],
           resource_key_name="domain",
           resource_key_id="domain",
-          resource_get_details=True,
           resource_update_method="PUT",
       )
 

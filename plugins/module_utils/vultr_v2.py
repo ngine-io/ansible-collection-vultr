@@ -183,10 +183,6 @@ class AnsibleVultr:
         resource = self.query()
         if not resource:
             resource = self.create()
-
-            #TODO: remove after fix dns_sec in domain returned
-            if resource and self.resource_get_details:
-                resource = self.query(resource_id=resource[self.resource_key_id])
         else:
             resource = self.update(resource)
 

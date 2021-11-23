@@ -10,7 +10,7 @@ __metaclass__ = type
 
 DOCUMENTATION = '''
 ---
-module: vultr_dns_domain
+module: dns_domain
 short_description: Manages DNS domains on Vultr.
 description:
   - Create and remove DNS domains.

@@ -147,12 +147,14 @@ class AnsibleVultrStartupScript(AnsibleVultr):
                     return True
         return False
 
-    def get_result(self, resource):
+    def configure(self):
+        if self.module.params['script']:
+            self.module.params['script'] = base64.b64encode(self.module.params['script'].encode())
+
+    def transform_result(self, resource):
         if resource:
             resource['script'] = base64.b64decode(resource['script']).decode()
-        self.result[self.namespace] = resource
-        self.module.exit_json(**self.result)
-
+        return resource
 
 def main():
     argument_spec = vultr_argument_spec()
@@ -184,7 +186,6 @@ def main():
     if module.params.get('state') == "absent":
         vultr.absent()
     else:
-        module.params['script'] = base64.b64encode(module.params['script'].encode())
         vultr.present()
 
 if __name__ == '__main__':

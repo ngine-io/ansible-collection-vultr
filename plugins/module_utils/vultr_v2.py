@@ -114,6 +114,20 @@ class AnsibleVultr:
             'Accept': 'application/json',
         }
 
+        # Hook custom configurations
+        self.configure()
+
+    def configure(self):
+        pass
+
+    def get_resource_or_fail(self, path, resource_result_key, param_key, resource_name_key="name", resource_id_key="id"):
+        resources = self.api_query(path=path)
+        if resources:
+            for resource in resources[resource_result_key]:
+                if self.module.params.get(param_key) in (resource[resource_name_key], resource.get(resource_id_key)):
+                    return resource
+        self.fail_json(msg="Resource %s not found: %s" % (path, param_key))
+
     def api_query(self, path, method="GET", data=None):
 
         retry_max_delay = self.module.params['api_retry_max_delay']
@@ -255,6 +269,10 @@ class AnsibleVultr:
                 )
         self.get_result(resource)
 
+    def transform_result(self, resource):
+        return resource
+
     def get_result(self, resource):
+        resource = self.transform_result(resource)
         self.result[self.namespace] = resource
         self.module.exit_json(**self.result)

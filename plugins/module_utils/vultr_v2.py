@@ -88,10 +88,10 @@ class AnsibleVultr:
         self.resource_get_details = resource_get_details
 
         # List of params used to create the resource
-        self.resource_create_param_keys = resource_create_param_keys or ['name']
+        self.resource_create_param_keys = resource_create_param_keys or []
 
         # List of params used to update the resource
-        self.resource_update_param_keys = resource_update_param_keys or ['name']
+        self.resource_update_param_keys = resource_update_param_keys or []
 
         # Some resources have PUT, many have PATCH
         self.resource_update_method = resource_update_method

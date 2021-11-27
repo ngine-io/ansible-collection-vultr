@@ -120,16 +120,7 @@ class AnsibleVultr:
     def configure(self):
         pass
 
-    def get_resource_or_fail(self, path, resource_result_key, param_key, resource_name_key="name", resource_id_key="id"):
-        resources = self.api_query(path=path)
-        if resources:
-            for resource in resources[resource_result_key]:
-                if self.module.params.get(param_key) in (resource[resource_name_key], resource.get(resource_id_key)):
-                    return resource
-        self.fail_json(msg="Resource %s not found: %s" % (path, param_key))
-
     def api_query(self, path, method="GET", data=None):
-
         retry_max_delay = self.module.params['api_retry_max_delay']
         randomness = random.randint(0, 1000) / 1000.0
 
@@ -173,25 +164,39 @@ class AnsibleVultr:
             if resource:
                 return resource[self.ressource_result_key_singular]
         else:
-            found = dict()
-            for resource in self.query_list():
-                if resource.get(self.resource_key_name) == self.module.params.get(self.resource_key_name):
-                    if found:
-                        self.module.fail_json(
-                            msg="More than one record with name=%s found. "
-                            "Use multiple=yes if module supports it." % resource.get(self.resource_key_name))
-                    found = resource
-
-            if found:
-                if self.resource_get_details:
-                    return self.query(resource_id=found[self.resource_key_id])
-                else:
-                    return found
+            return self.query_by_name(
+                key_name=self.resource_key_name,
+                key_id=self.resource_key_id,
+                get_details=self.resource_get_details,
+                path=self.resource_path,
+                result_key=self.ressource_result_key_plural
+            )
         return dict()
 
-    def query_list(self):
-        resources = self.api_query(path=self.resource_path)
-        return resources[self.ressource_result_key_plural] if resources else []
+    def query_by_name(self, key_name=None, key_id=None, get_details=False, path=None, result_key=None, fail_not_found=False):
+        found = dict()
+        for resource in self.query_list(path=path, result_key=result_key):
+            if resource.get(key_name) == self.module.params.get(key_name):
+                if found:
+                    self.module.fail_json(
+                        msg="More than one record with name=%s found. "
+                        "Use multiple=yes if module supports it." % resource.get(key_name))
+                found = resource
+        if found:
+            if get_details:
+                return self.query(resource_id=found[key_id])
+            else:
+                return found
+
+        elif fail_not_found:
+            self.fail_json(msg="No Resource %s with %s found: %s" % (path, key_name, self.module.params.get(key_name)))
+
+
+    def query_list(self, path=None, result_key=None):
+        path = path or self.resource_path
+        result_key = result_key or self.ressource_result_key_plural
+        resources = self.api_query(path=path)
+        return resources[result_key] if resources else []
 
     def present(self):
         resource = self.query()
@@ -199,7 +204,6 @@ class AnsibleVultr:
             resource = self.create()
         else:
             resource = self.update(resource)
-
         self.get_result(resource)
 
     def create(self):
@@ -273,6 +277,5 @@ class AnsibleVultr:
         return resource
 
     def get_result(self, resource):
-        resource = self.transform_result(resource)
-        self.result[self.namespace] = resource
+        self.result[self.namespace] = self.transform_result(resource)
         self.module.exit_json(**self.result)

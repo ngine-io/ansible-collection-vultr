@@ -185,7 +185,7 @@ class AnsibleVultrReservedIp(AnsibleVultr):
 
             return resources['instances'][0]['id']
 
-    def query_list(self):
+    def query_list(self, path=None, result_key=None):
         resources = self.api_query(path=self.resource_path)
 
         resources_filtered = list()

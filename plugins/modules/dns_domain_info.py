@@ -69,6 +69,11 @@ vultr_dns_domain_info:
       returned: success
       type: str
       sample: example.com
+    dns_sec:
+      description: Whether DNSSEC is enabled or disabled.
+      returned: success
+      type: str
+      sample: disabled
     date_created:
       description: Date the DNS domain was created.
       returned: success

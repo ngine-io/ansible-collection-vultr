@@ -133,6 +133,7 @@ def main():
           ressource_result_key_singular="ssh_key",
           resource_create_param_keys=['name', 'ssh_key'],
           resource_update_param_keys=['name', 'ssh_key'],
+          resource_key_name="name",
       )
 
     if module.params.get('state') == "absent":

@@ -157,6 +157,9 @@ from ..module_utils.vultr_v2 import (
 
 class AnsibleVultrReservedIp(AnsibleVultr):
 
+    def configure(self):
+        self.instance_id = self.get_instance_id()
+
     def get_instance_id(self):
         instance_id = self.module.params['instance_id']
         if instance_id is not None:
@@ -200,9 +203,6 @@ class AnsibleVultrReservedIp(AnsibleVultr):
 
         return resources_filtered
 
-    def configure(self):
-        self.instance_id = self.get_instance_id()
-
     def create(self):
         resource = super().create()
         if resource and self.instance_id:
@@ -214,7 +214,7 @@ class AnsibleVultrReservedIp(AnsibleVultr):
                     data=dict(instance_id=self.instance_id),
                 )
                 # Refresh
-                resource = self.query(resource_id=resource[self.resource_key_id])
+                resource = self.query_by_id(resource_id=resource[self.resource_key_id])
         return resource
 
     def update(self, resource):
@@ -231,7 +231,7 @@ class AnsibleVultrReservedIp(AnsibleVultr):
                     data=dict(instance_id=self.instance_id),
                 )
                 # Refresh
-                resource = self.query(resource_id=resource[self.resource_key_id])
+                resource = self.query_by_id(resource_id=resource[self.resource_key_id])
 
         # Attach instance or change attached instance
         elif self.instance_id and resource['instance_id'] != self.instance_id:
@@ -243,7 +243,7 @@ class AnsibleVultrReservedIp(AnsibleVultr):
                     data=dict(instance_id=self.instance_id),
                 )
                 # Refresh
-                resource = self.query(resource_id=resource[self.resource_key_id])
+                resource = self.query_by_id(resource_id=resource[self.resource_key_id])
 
         return resource
 

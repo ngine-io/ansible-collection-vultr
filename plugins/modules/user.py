@@ -217,6 +217,7 @@ def main():
           ressource_result_key_singular="user",
           resource_create_param_keys=['name', 'email', 'password', 'api_enabled', 'acls'],
           resource_update_param_keys=['name', 'email', 'api_enabled', 'acls'],
+          resource_key_name="Name",
       )
 
     if module.params.get('state') == "absent":

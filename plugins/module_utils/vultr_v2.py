@@ -58,7 +58,7 @@ class AnsibleVultr:
         resource_path,
         ressource_result_key_singular,
         ressource_result_key_plural=None,
-        resource_key_name="name",
+        resource_key_name=None,
         resource_key_id="id",
         resource_get_details=False,
         resource_create_param_keys=None,
@@ -158,43 +158,54 @@ class AnsibleVultr:
             fetch_url_info=info
         )
 
-    def query(self, resource_id=None):
-        if resource_id is not None:
-            resource = self.api_query(path="%s%s" % (self.resource_path, "/" + resource_id if resource_id else resource_id))
-            if resource:
-                return resource[self.ressource_result_key_singular]
-        else:
-            return self.query_by_name(
-                key_name=self.resource_key_name,
-                key_id=self.resource_key_id,
-                get_details=self.resource_get_details,
-                path=self.resource_path,
-                result_key=self.ressource_result_key_plural
-            )
-        return dict()
+    def query_filter_list_by_name(self, path, key_name, result_key, param_key=None, key_id=None, get_details=False, fail_not_found=False):
+        param_value = self.module.params.get(param_key or key_name)
 
-    def query_by_name(self, key_name=None, key_id=None, get_details=False, path=None, result_key=None, fail_not_found=False):
         found = dict()
         for resource in self.query_list(path=path, result_key=result_key):
-            if resource.get(key_name) == self.module.params.get(key_name):
+            if resource.get(key_name) == param_value:
                 if found:
                     self.module.fail_json(
                         msg="More than one record with name=%s found. "
-                        "Use multiple=yes if module supports it." % resource.get(key_name))
+                            "Use multiple=yes if module supports it." % param_value)
                 found = resource
         if found:
             if get_details:
-                return self.query(resource_id=found[key_id])
+                return self.query_by_id(resource_id=found[key_id])
             else:
                 return found
 
         elif fail_not_found:
-            self.fail_json(msg="No Resource %s with %s found: %s" % (path, key_name, self.module.params.get(key_name)))
+            self.fail_json(msg="No Resource %s with %s found: %s" % (path, key_name, param_value))
 
+    def query_filter_list(self):
+        # Returns a single dict representing the resource queryied by name
+        return self.query_filter_list_by_name(
+            key_name=self.resource_key_name,
+            key_id=self.resource_key_id,
+            get_details=self.resource_get_details,
+            path=self.resource_path,
+            result_key=self.ressource_result_key_plural
+        )
+
+    def query_by_id(self, resource_id=None, path=None, result_key=None):
+        # Defaults
+        path = path or self.resource_path
+        result_key = result_key or self.ressource_result_key_singular
+
+        resource = self.api_query(path="%s%s" % (path, "/" + resource_id if resource_id else resource_id))
+        if resource:
+            return resource[result_key]
+
+    def query(self):
+        # Returns a single dict representing the resource
+        return self.query_filter_list()
 
     def query_list(self, path=None, result_key=None):
+        # Defaults
         path = path or self.resource_path
         result_key = result_key or self.ressource_result_key_plural
+
         resources = self.api_query(path=path)
         return resources[result_key] if resources else []
 
@@ -255,7 +266,7 @@ class AnsibleVultr:
                     method=self.resource_update_method,
                     data=data,
                 )
-                resource = self.query(resource_id=resource[self.resource_key_id])
+                resource = self.query_by_id(resource_id=resource[self.resource_key_id])
         return resource
 
     def absent(self):

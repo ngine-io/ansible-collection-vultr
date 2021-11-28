@@ -181,6 +181,7 @@ def main():
           resource_get_details=True,
           resource_create_param_keys=['name', 'type', 'script'],
           resource_update_param_keys=['name', 'script'],
+          resource_key_name="name",
       )
 
     if module.params.get('state') == "absent":

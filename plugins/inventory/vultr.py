@@ -52,6 +52,17 @@ DOCUMENTATION = r'''
         filter_by_tag:
             description: Only return servers filtered by this tag
             type: string
+        filters:
+            description:
+            - Filter hosts with Jinja templates.
+            - If no filters are specified, all hosts are added to the inventory.
+            type: list
+            elements: str
+            default: []
+        strict_filtering:
+            description: Error out if Jinja filters fail
+            type: boolean
+            default: no
 '''
 
 EXAMPLES = r'''
@@ -170,6 +181,8 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
             raise AnsibleError('Could not find an API key. Check inventory file and Vultr configuration files.')
 
         hostname_preference = self.get_option('hostname')
+        host_filters = self.get_option('filters')
+        strict = self.get_option('strict_filtering')
 
         # Add a top group 'vultr'
         self.inventory.add_group(group='vultr')
@@ -180,22 +193,48 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
 
             server = Vultr.normalize_result(server, SCHEMA)
 
-            self.inventory.add_host(host=server['name'], group='vultr')
+            host_name = server['name']
+            if hostname_preference != 'name':
+                host_name = server[hostname_preference]
+
+            host_vars = {}
+            for k, v in server.items():
+                host_vars[k] = v
+
+            if not self._passes_filters(host_filters, host_vars, host_name, strict):
+                self.display.vvv("Host {0} did not pass all filters".format(server['name']))
+                continue
+
+            self.inventory.add_host(host=host_name, group='vultr')
 
             for attribute, value in server.items():
-                self.inventory.set_variable(server['name'], attribute, value)
-
-            if hostname_preference != 'name':
-                self.inventory.set_variable(server['name'], 'ansible_host', server[hostname_preference])
+                self.inventory.set_variable(host_name, attribute, value)
 
             # Use constructed if applicable
             strict = self.get_option('strict')
 
             # Composed variables
-            self._set_composite_vars(self.get_option('compose'), server, server['name'], strict=strict)
+            self._set_composite_vars(self.get_option('compose'), server, host_name, strict=strict)
 
             # Complex groups based on jinja2 conditionals, hosts that meet the conditional are added to group
-            self._add_host_to_composed_groups(self.get_option('groups'), server, server['name'], strict=strict)
+            self._add_host_to_composed_groups(self.get_option('groups'), server, host_name, strict=strict)
 
             # Create groups based on variable values and add the corresponding hosts to it
-            self._add_host_to_keyed_groups(self.get_option('keyed_groups'), server, server['name'], strict=strict)
+            self._add_host_to_keyed_groups(self.get_option('keyed_groups'), server, host_name, strict=strict)
+
+    def _passes_filters(self, filters, variables, host, strict=False):
+        if filters and isinstance(filters, list):
+            for template in filters:
+                try:
+                    if not self._compose(template, variables):
+                        return False
+                except Exception as e:
+                    if strict:
+                        raise AnsibleError(
+                            "Could not evaluate host filter {0} for host {1}: {2}".format(
+                                template, host, to_native(e)
+                            )
+                        )
+                    # Better be safe and not include any hosts by accident.
+                    return False
+        return True

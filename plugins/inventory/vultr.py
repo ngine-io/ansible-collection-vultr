@@ -182,7 +182,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
 
         hostname_preference = self.get_option('hostname')
         host_filters = self.get_option('filters')
-        strict = self.get_option('strict_filtering')
+        strict_filtering = self.get_option('strict_filtering')
 
         # Add a top group 'vultr'
         self.inventory.add_group(group='vultr')
@@ -201,7 +201,7 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
             for k, v in server.items():
                 host_vars[k] = v
 
-            if not self._passes_filters(host_filters, host_vars, host_name, strict):
+            if not self._passes_filters(host_filters, host_vars, host_name, strict_filtering):
                 self.display.vvv("Host {0} did not pass all filters".format(server['name']))
                 continue
 
@@ -222,14 +222,14 @@ class InventoryModule(BaseInventoryPlugin, Constructable):
             # Create groups based on variable values and add the corresponding hosts to it
             self._add_host_to_keyed_groups(self.get_option('keyed_groups'), server, host_name, strict=strict)
 
-    def _passes_filters(self, filters, variables, host, strict=False):
+    def _passes_filters(self, filters, variables, host, strict_filtering=False):
         if filters and isinstance(filters, list):
             for template in filters:
                 try:
                     if not self._compose(template, variables):
                         return False
                 except Exception as e:
-                    if strict:
+                    if strict_filtering:
                         raise AnsibleError(
                             "Could not evaluate host filter {0} for host {1}: {2}".format(
                                 template, host, to_native(e)

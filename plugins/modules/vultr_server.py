@@ -540,7 +540,7 @@ class AnsibleVultrServer(Vultr):
                 'notify_activate': self.get_yes_or_no('notify_activate'),
                 'tag': self.module.params.get('tag'),
                 'reserved_ip_v4': self.module.params.get('reserved_ip_v4'),
-                'user_data': self.get_user_data(),
+                'userdata': self.get_user_data(),
                 'SCRIPTID': self.get_startup_script().get('SCRIPTID'),
             }
             self.api_query(

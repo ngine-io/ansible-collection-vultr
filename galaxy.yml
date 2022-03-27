@@ -3,17 +3,17 @@ authors:
   - "René Moser (@resmo)"
   - "Yanis Guenane (@Spredzy)"
 dependencies: {}
-description: 'Ansible Collection for Vultr Cloud'
-documentation: ''
-homepage: 'https://github.com/ngine-io/ansible-collection-vultr'
-issues: 'https://github.com/ngine-io/ansible-collection-vultr/issues'
+description: "Ansible Collection for Vultr Cloud"
+documentation: ""
+homepage: "https://github.com/ngine-io/ansible-collection-vultr"
+issues: "https://github.com/ngine-io/ansible-collection-vultr/issues"
 license: GPL-3.0-or-later
 name: vultr
 namespace: ngine_io
 readme: README.md
-repository: 'https://github.com/ngine-io/ansible-collection-vultr'
+repository: "https://github.com/ngine-io/ansible-collection-vultr"
 tags:
   - cloud
   - vultr
   - ngine_io
-version: 1.1.0
+version: 1.1.1

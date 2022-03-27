@@ -28,3 +28,10 @@ releases:
     fragments:
     - 14-attach-detach-and-resize-volumes.yml
     release_date: '2021-02-02'
+  1.1.1:
+    changes:
+      bugfixes:
+      - vultr_server - Fix user data not handled correctly (https://github.com/ngine-io/ansible-collection-vultr/pull/26).
+    fragments:
+    - 26-fix-user-data.yml
+    release_date: '2022-03-27'

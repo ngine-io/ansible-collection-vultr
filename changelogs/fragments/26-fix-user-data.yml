@@ -1,2 +1,0 @@
-bugfixes:
-  - vultr_server - Fix user data not handled correctly (https://github.com/ngine-io/ansible-collection-vultr/pull/26).

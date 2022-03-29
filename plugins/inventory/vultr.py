@@ -9,7 +9,6 @@ __metaclass__ = type
 
 DOCUMENTATION = r'''
     name: vultr
-    plugin_type: inventory
     author:
         - Yanis Guenane (@Spredzy)
         - René Moser (@resmo)

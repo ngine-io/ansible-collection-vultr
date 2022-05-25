@@ -1,3 +1,10 @@
+
+# !!! NOTE !!!
+
+This collection is in maintance mode: bug fixes only. For new features, please visit https://github.com/vultr/ansible-collection-vultr/.
+
+----
+
 ![Collection integration](https://github.com/ngine-io/ansible-collection-vultr/workflows/Collection%20integration/badge.svg)
  [![Codecov](https://img.shields.io/codecov/c/github/ngine-io/ansible-collection-vultr)](https://codecov.io/gh/ngine-io/ansible-collection-vultr)
 [![License](https://img.shields.io/badge/license-GPL%20v3.0-brightgreen.svg)](LICENSE)

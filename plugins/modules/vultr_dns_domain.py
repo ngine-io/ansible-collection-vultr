@@ -4,7 +4,8 @@
 # Copyright (c) 2017, René Moser <mail@renemoser.net>
 # GNU General Public License v3.0+ (see COPYING or https://www.gnu.org/licenses/gpl-3.0.txt)
 
-from __future__ import (absolute_import, division, print_function)
+from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 
@@ -26,7 +27,7 @@ options:
   server_ip:
     description:
       - The default server IP.
-      - Use M(vultr_dns_record) to change it once the domain is created.
+      - Use M(ngine_io.vultr.vultr_dns_record) to change it once the domain is created.
       - Required if C(state=present).
     type: str
   state:
@@ -102,10 +103,8 @@ vultr_dns_domain:
 '''
 
 from ansible.module_utils.basic import AnsibleModule
-from ..module_utils.vultr import (
-    Vultr,
-    vultr_argument_spec,
-)
+
+from ..module_utils.vultr import Vultr, vultr_argument_spec
 
 
 class AnsibleVultrDnsDomain(Vultr):

@@ -5,6 +5,20 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.1.2
+======
+
+Release Summary
+---------------
+
+This collection has turned into maintenance mode. We encourage you to add new features to its successor at https://galaxy.ansible.com/vultr/cloud.
+
+
+Minor Changes
+-------------
+
+- Documentation fixes.
+
 v1.1.1
 ======
 

@@ -35,3 +35,15 @@ releases:
     fragments:
     - 26-fix-user-data.yml
     release_date: '2022-03-27'
+  1.1.2:
+    changes:
+      minor_changes:
+      - Documentation fixes.
+      release_summary: 'This collection has turned into maintenance mode. We encourage
+        you to add new features to its successor at https://galaxy.ansible.com/vultr/cloud.
+
+        '
+    fragments:
+    - sanity.yml
+    - summary.yml
+    release_date: '2022-06-08'

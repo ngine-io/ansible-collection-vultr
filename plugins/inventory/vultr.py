@@ -85,7 +85,7 @@ SCHEMA = {
     'SUBID': dict(key='id'),
     'label': dict(key='name'),
     'date_created': dict(),
-    'allowed_bandwidth_gb': dict(convert_to='int'),
+    'allowed_bandwidth_gb': dict(convert_to='float'),
     'auto_backups': dict(key='auto_backup_enabled', convert_to='bool'),
     'current_bandwidth_gb': dict(),
     'kvm_url': dict(),

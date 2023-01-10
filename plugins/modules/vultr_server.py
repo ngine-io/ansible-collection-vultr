@@ -210,8 +210,8 @@ vultr_server:
     allowed_bandwidth_gb:
       description: Allowed bandwidth to use in GB
       returned: success
-      type: int
-      sample: 1000
+      type: float
+      sample: 1000.5
     auto_backup_enabled:
       description: Whether automatic backups are enabled
       returned: success
@@ -359,7 +359,7 @@ class AnsibleVultrServer(Vultr):
             'SUBID': dict(key='id'),
             'label': dict(key='name'),
             'date_created': dict(),
-            'allowed_bandwidth_gb': dict(convert_to='int'),
+            'allowed_bandwidth_gb': dict(convert_to='float'),
             'auto_backups': dict(key='auto_backup_enabled', convert_to='bool'),
             'current_bandwidth_gb': dict(),
             'kvm_url': dict(),

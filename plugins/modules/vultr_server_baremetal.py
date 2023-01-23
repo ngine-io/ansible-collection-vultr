@@ -152,8 +152,8 @@ vultr_server_baremetal:
     allowed_bandwidth_gb:
       description: Allowed bandwidth to use in GB
       returned: success
-      type: int
-      sample: 1000
+      type: float
+      sample: 1000.5
     cost_per_month:
       description: Cost per month for the server
       returned: success
@@ -271,7 +271,7 @@ class AnsibleVultrServerBareMetal(Vultr):
             'SUBID': dict(key='id'),
             'label': dict(key='name'),
             'date_created': dict(),
-            'allowed_bandwidth_gb': dict(convert_to='int'),
+            'allowed_bandwidth_gb': dict(convert_to='float'),
             'current_bandwidth_gb': dict(),
             'default_password': dict(),
             'internal_ip': dict(),

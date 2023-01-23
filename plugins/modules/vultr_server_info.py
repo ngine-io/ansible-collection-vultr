@@ -86,8 +86,8 @@ vultr_server_info:
     allowed_bandwidth_gb:
       description: Allowed bandwidth to use in GB
       returned: success
-      type: int
-      sample: 1000
+      type: float
+      sample: 1000.5
     auto_backup_enabled:
       description: Whether automatic backups are enabled
       returned: success
@@ -232,7 +232,7 @@ class AnsibleVultrServerInfo(Vultr):
             "FIREWALLGROUPID": dict(key='firewallgroup', transform=self._get_firewallgroup_name),
             "SUBID": dict(key='id', convert_to='int'),
             "VPSPLANID": dict(key='plan', convert_to='int', transform=self._get_plan_name),
-            "allowed_bandwidth_gb": dict(convert_to='int'),
+            "allowed_bandwidth_gb": dict(convert_to='float'),
             'auto_backups': dict(key='auto_backup_enabled', convert_to='bool'),
             "cost_per_month": dict(convert_to='float'),
             "current_bandwidth_gb": dict(convert_to='float'),

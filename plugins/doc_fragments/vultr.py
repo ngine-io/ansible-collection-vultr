@@ -55,7 +55,11 @@ options:
 requirements:
   - python >= 2.6
 notes:
-  - "DEPRECATED: Please use vultr.cloud instead."
   - Also see the API documentation on https://www.vultr.com/api/v1/.
+
+deprecated:
+  removed_in: 2.0.0
+  why: This module uses the deprecated Vultr v1 API.
+  alternative: Please use the vultr.cloud collection instead.
 
 '''

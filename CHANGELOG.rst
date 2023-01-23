@@ -5,6 +5,16 @@ Vultr Collection Release Notes
 .. contents:: Topics
 
 
+v1.1.3
+======
+
+Bugfixes
+--------
+
+- iventory - Fixed ``allowed_bandwidth_gb`` to be returned as float (https://github.com/ngine-io/ansible-collection-vultr/pull/35).
+- vultr_server - Fixed ``allowed_bandwidth_gb`` to be returned as float (https://github.com/ngine-io/ansible-collection-vultr/pull/35).
+- vultr_server_baremetal - Fixed ``allowed_bandwidth_gb`` to be returned as float (https://github.com/ngine-io/ansible-collection-vultr/pull/35).
+
 v1.1.2
 ======
 

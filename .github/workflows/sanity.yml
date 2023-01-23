@@ -1,25 +1,28 @@
 name: Sanity
+
 on:
-  workflow_call:
+  push:
+    branches:
+      - master
   schedule:
     - cron: "5 12 * * *"
   pull_request:
+  workflow_call:
+  workflow_dispatch:
 
 jobs:
   sanity:
     name: Sanity (${{ matrix.ansible }})
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     defaults:
       run:
         working-directory: ansible_collections/ngine_io/vultr
     strategy:
       matrix:
         ansible:
+          - stable-2.14
           - stable-2.13
           - stable-2.12
-          - stable-2.11
-          - stable-2.10
-          - stable-2.9
           - devel
     steps:
       - name: Check out code

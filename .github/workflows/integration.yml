@@ -8,7 +8,7 @@ on:
 jobs:
   integration-test:
     name: Integration test using Python ${{ matrix.python-version }}
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-20.04
     defaults:
       run:
         working-directory: ansible_collections/ngine_io/vultr

@@ -3,16 +3,17 @@
 # Simplified BSD License (see licenses/simplified_bsd.txt or https://opensource.org/licenses/BSD-2-Clause)
 
 from __future__ import absolute_import, division, print_function
+
 __metaclass__ = type
 
 import os
-import time
 import random
+import time
 import urllib
-from ansible.module_utils.six.moves import configparser
-from ansible.module_utils._text import to_text, to_native
-from ansible.module_utils.urls import fetch_url
 
+from ansible.module_utils._text import to_native, to_text
+from ansible.module_utils.six.moves import configparser
+from ansible.module_utils.urls import fetch_url
 
 VULTR_API_ENDPOINT = "https://api.vultr.com"
 VULTR_USER_AGENT = 'Ansible Vultr'
@@ -39,6 +40,14 @@ class Vultr:
                 "The Vultr modules were renamed. The prefix of the modules changed from vr_ to vultr_",
                 collection_name='ngine_io.vultr',
                 version='2.0.0')  # Was Ansbile 2.11
+
+        module.deprecate(
+            msg="This module is deprecated, it uses the deprecated Vultr v1 API. "
+            "Please switch to the modules in collection vultr.cloud as soon as possible. "
+            "Also see https://galaxy.ansible.com/vultr/cloud.",
+            collection_name="ngine_io.vultr",
+            version="2.0.0"
+        )
 
         self.module = module
 
